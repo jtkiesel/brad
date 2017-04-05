@@ -36,10 +36,10 @@ client.on('message', message => {
 		if (nickname.length == 2) {
 			var name = nickname[0];
 			var teamId = nickname[1].toUpperCase();
-
+console.log('hello');
 			if (/^([0-9]{1,5}[A-Z]?|[A-Z]{2,6}[0-9]{0,2})$/.test(teamId)) {
 				var member = message.member;
-
+console.log('o shit');
 				member.setNickname(name + ' | ' + teamId);
 
 				setRole(member);
