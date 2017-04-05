@@ -8,6 +8,8 @@ client.on('ready', () => {
 client.on('message', message => {
 	if (message.content === 'ping') {
 		message.reply('pong');
+		console.log(Object.keys(message.guild));
+		console.log(Object.values(message.guild));
 	}
 });
 
