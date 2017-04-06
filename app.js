@@ -41,7 +41,7 @@ console.log('member.roles: ' + JSON.stringify(member.roles));
 	}).catch(console.error);
 }
 */
-client.on('ready', () => {
+client.once('ready', () => {
 	console.log('I am ready!');
 });
 
