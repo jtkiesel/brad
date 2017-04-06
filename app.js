@@ -57,7 +57,7 @@ client.on('message', message => {
 				nickname = name + ' | ' + teamId;
 				message.member.setNickname(nickname);
 console.log('nickname: ' + nickname);
-				setDivision(member, nickname);
+				setDivision(message.member, nickname);
 			}
 		}
 	}
