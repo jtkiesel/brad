@@ -33,9 +33,7 @@ console.log('member.roles: ' + Object.keys(member.roles));
 	}
 	member.addRole(roleIds[division]).then(() => {
 console.log('member.roles: ' + Object.keys(member.roles));
-	}).catch(() => {
-		console.log('Promise rejected 2');
-	});
+	}).catch(console.error);
 }
 
 client.on('ready', () => {
@@ -54,9 +52,7 @@ client.on('message', message => {
 				message.member.setNickname(name + ' | ' + teamId).then(() => {
 console.log('nickname: ' + message.member.nickname);
 					setRole(message.member);
-				}).catch(() => {
-					console.log('Promise rejected');
-				});
+				}).catch(console.error);
 			}
 		}
 	}
