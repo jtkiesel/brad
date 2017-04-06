@@ -22,6 +22,8 @@ fs.readFile(__dirname + '/divisions.csv', 'utf8', (err, data) => {
 });
 
 function setRole(member) {
+console.log('member: ' + Object.keys(member));
+console.log('member: ' + Object.values(member));
 	var teamId = member.nickname.split(' | ')[1];
 	var division = divisions[teamId];
 console.log('teamId: ' + teamId);
