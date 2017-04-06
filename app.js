@@ -32,9 +32,10 @@ console.log('member.roles: ' + Object.keys(member.roles));
 		division = 'NonCompetitor';
 	}
 console.log('role: ' + division + ': ' + roleIds[division]);
-	member.addRole(member.guild.roles.get('name', division));/*.then(() => {
+	member.addRole(member.guild.roles.get('name', division)).then(() => {
+console.log('member: ' + Object.keys(member));
 console.log('member.roles: ' + Object.keys(member.roles));
-	}).catch(console.error);*/
+	}).catch(console.error);
 }
 
 client.on('ready', () => {
