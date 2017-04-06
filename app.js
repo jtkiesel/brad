@@ -30,7 +30,7 @@ console.log('teamId: ' + teamId);
 console.log('division: ' + division);
 	member.removeRoles(Object.values(roleIds));
 console.log('member.roles: ' + Object.keys(member.roles));
-	if (division in ['Science', 'Technology', 'Research', 'Engineering', 'Arts', 'Math', 'Spirit', 'Opportunity', 'Design', 'Innovate']) {
+	if (Object.keys(roleIds).indexOf(division) > -1) {
 		member.addRole(member.guild.roles.find({name: division}));
 	} else {
 		member.addRole(member.guild.roles.find({name: 'Non-Competitor'}));
