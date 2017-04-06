@@ -32,7 +32,7 @@ console.log('member.roles: ' + Object.keys(member.roles));
 		division = 'NonCompetitor';
 	}
 console.log('role: ' + division + ': ' + roleIds[division]);
-	member.addRole({name: division}).then(() => {
+	member.addRole(division).then(() => {
 console.log('member.roles: ' + Object.keys(member.roles));
 	}).catch(console.error);
 }
