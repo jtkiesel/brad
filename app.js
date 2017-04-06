@@ -52,14 +52,15 @@ console.log('hello');
 				var member = message.member;
 console.log('member: ' + Object.keys(member));
 console.log('member: ' + Object.values(member));
-				message.member.setNickname('hello');//name + ' | ' + teamId);
-				message.guild.member(client.user).setNickname('hello', (err) => {
-					if (err) {
-						throw err;
-					}
-				});
+				message.member.setNickname('hello').then(user => {//name + ' | ' + teamId);
+//				message.guild.member(client.user).setNickname('hello', (err) => {
+//					if (err) {
+//						throw err;
+//					}
+//				});
 console.log('nickname: ' + member.nickname);
-				setRole(member);
+					setRole(member);
+				});
 			}
 		}
 	}
