@@ -47,7 +47,7 @@ client.on('ready', () => {
 
 client.on('message', message => {
 	message.member.setNickname('test').then((user) => {
-		console.log(message.guild.member(user).nickname);
+		console.log(message.guild.member(user).displayName);
 	});
 /*	if (message.channel.name === 'verify') {
 		var nickname = message.content.replace(/\s+/g, '').split('|');
