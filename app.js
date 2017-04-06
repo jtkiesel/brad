@@ -4,7 +4,7 @@ const client = new Discord.Client();
 //const request = require('request');
 const fs = require('fs');
 
-var roleIds = {'Science': '298695769848938496', 'Technology': '298696545249918976', 'Research': '298696653937049600', 'Engineering': '298696666536607745', 'Arts': '298696704419430402', 'Math': '298696720538402816', 'Spirit': '298696736652656640', 'Opportunity': '298696748111757326', 'Design': '298696794056032257', 'Innovate': '298696806806716418', 'Non-Competitor': '298700344110612480'};
+var roleIds = {Science: '298695769848938496', Technology: '298696545249918976', Research: '298696653937049600', Engineering: '298696666536607745', Arts: '298696704419430402', Math: '298696720538402816', Spirit: '298696736652656640', Opportunity: '298696748111757326', Design: '298696794056032257', Innovate: '298696806806716418', Non-Competitor: '298700344110612480'};
 var divisions = {};
 
 fs.readFile(__dirname + '/divisions.csv', 'utf8', (err, data) => {
