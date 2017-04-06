@@ -34,7 +34,6 @@ console.log('member.roles: ' + Object.keys(member.roles));
 	member.addRole(member.guild.roles.find('name', division)).then(() => {
 console.log('member: ' + Object.keys(member));
 console.log('member.roles: ' + Object.keys(member.roles));
-		}).catch(console.error);
 	}).catch(console.error);
 }
 
