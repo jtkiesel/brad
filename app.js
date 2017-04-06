@@ -54,9 +54,9 @@ client.on('message', message => {
 			var teamId = nickname[1].toUpperCase();
 
 			if (/^([0-9]{1,5}[A-Z]?|[A-Z]{2,6}[0-9]{0,2})$/.test(teamId)) {
-				message.member.setNickname(name + ' | ' + teamId).then(() => {
-console.log('nickname: ' + message.member.nickname);
-					setDivision(message.member);
+				message.member.setNickname(name + ' | ' + teamId).then((member) => {
+console.log('nickname: ' + member.nickname);
+					setDivision(member);
 				}).catch(console.error);
 			}
 		}
