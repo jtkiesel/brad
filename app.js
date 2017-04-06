@@ -22,8 +22,6 @@ fs.readFile(__dirname + '/divisions.csv', 'utf8', (err, data) => {
 });
 
 function setRole(member) {
-console.log('member: ' + Object.keys(member));
-console.log('member: ' + Object.values(member));
 	var teamId = member.nickname.split(' | ')[1];
 	var division = divisions[teamId];
 console.log('teamId: ' + teamId);
@@ -33,7 +31,7 @@ console.log('member.roles: ' + Object.keys(member.roles));
 	if (Object.keys(roleIds).indexOf(division) < 0) {
 		division = 'Non-Competitor';
 	}
-	member.addRole(roleIds[division]).then(user => {
+	member.addRole(roleIds[division]).then(() => {
 console.log('member.roles: ' + Object.keys(member.roles));
 	}).catch(() => {
 		console.log('Promise rejected 2');
@@ -53,7 +51,7 @@ client.on('message', message => {
 			var teamId = nickname[1].toUpperCase();
 
 			if (/^([0-9]{1,5}[A-Z]?|[A-Z]{2,6}[0-9]{0,2})$/.test(teamId)) {
-				message.member.setNickname(name + ' | ' + teamId).then(user => {
+				message.member.setNickname(name + ' | ' + teamId).then(() => {
 console.log('nickname: ' + message.member.nickname);
 					setRole(message.member);
 				}).catch(() => {
