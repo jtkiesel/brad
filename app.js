@@ -46,7 +46,10 @@ client.on('ready', () => {
 });
 
 client.on('message', message => {
-	if (message.channel.name === 'verify') {
+	message.member.setNickname('test').then((user) => {
+		console.log(message.guild.member(user).nickname);
+	});
+/*	if (message.channel.name === 'verify') {
 		var nickname = message.content.replace(/\s+/g, '').split('|');
 
 		if (nickname.length == 2) {
@@ -60,7 +63,7 @@ console.log('nickname: ' + member.nickname);
 				}).catch(console.error);
 			}
 		}
-	}
+	}*/
 });
 
 client.login('Bot Mjk5MjczNjQ1MjE2MzY2NTky.C8bf0A.2xG6kiAxG569srFSvWqKQBhQHIM');
