@@ -25,7 +25,7 @@ function setRole(member) {
 	var teamId = member.nickname.split(' | ')[1];
 	var division = divisions[teamId];
 console.log('teamId: ' + teamId);
-console.log('division: ' + division;
+console.log('division: ' + division);
 	member.removeRoles(Object.values(roleIds));
 console.log('member.roles: ' + Object.keys(member.roles));
 	if (division in ['Science', 'Technology', 'Research', 'Engineering', 'Arts', 'Math', 'Spirit', 'Opportunity', 'Design', 'Innovate']) {
