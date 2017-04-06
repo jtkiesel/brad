@@ -26,8 +26,8 @@ function setDivision(member) {
 	var division = divisions[teamId];
 console.log('teamId: ' + teamId);
 console.log('division: ' + division);
-	member.removeRoles(member.roles);//Object.values(roleIds));
-console.log('member.roles: ' + Object.keys(member.roles));
+	member.removeRoles(member.roles || []);//Object.values(roleIds));
+//console.log('member.roles: ' + Object.keys(member.roles));
 	if (Object.keys(roleIds).indexOf(division) < 0) {
 		division = 'NonCompetitor';
 	}
