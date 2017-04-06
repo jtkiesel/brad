@@ -50,7 +50,8 @@ client.on('message', message => {
 console.log('hello');
 			if (/^([0-9]{1,5}[A-Z]?|[A-Z]{2,6}[0-9]{0,2})$/.test(teamId)) {
 				var member = message.member;
-console.log('member: ' + JSON.stringify(member));
+console.log('member: ' + Object.keys(member));
+console.log('member: ' + Object.values(member));
 				member.setNickname('hello');//name + ' | ' + teamId);
 console.log('nickname: ' + member.nickname);
 				setRole(member);
