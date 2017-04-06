@@ -52,7 +52,7 @@ console.log('hello');
 				var member = message.member;
 console.log('o shit');
 				member.setNickname(name + ' | ' + teamId);
-console.log('nickname: ' + member.nickname');
+console.log('nickname: ' + member.nickname);
 				setRole(member);
 			}
 		}
