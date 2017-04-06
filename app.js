@@ -31,6 +31,7 @@ console.log('member.roles: ' + Object.keys(member.roles));
 	if (Object.keys(roleIds).indexOf(division) < 0) {
 		division = 'NonCompetitor';
 	}
+console.log('role: ' + division + ': ' + roleIds[division]);
 	member.addRole(roleIds[division]).then(() => {
 console.log('member.roles: ' + Object.keys(member.roles));
 	}).catch(console.error);
