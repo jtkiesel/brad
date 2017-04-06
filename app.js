@@ -27,16 +27,17 @@ function setDivision(member) {
 console.log('teamId: ' + teamId);
 console.log('division: ' + division);
 	member.removeRoles(member.roles);//Object.values(roleIds));
-console.log('member._roles: ' + Object.keys(member._roles));
+console.log('member.roles: ' + Object.keys(member.roles));
 	if (Object.keys(roleIds).indexOf(division) < 0) {
 		division = 'NonCompetitor';
 	}
 console.log('roles: ' + Object.keys(member.guild._roles));
-console.log('role: ' + member.guild._roles.find('name', division));
-	member.addRole(member.guild._roles.find('name', division)).then(() => {
+	var role = member.guild.roles.find('name', division));
+console.log('role: ' + JSON.stringify(role));
+	member.addRole(role).then(() => {
 console.log('member: ' + Object.keys(member));
 console.log('member: ' + Object.values(member));
-console.log('member._roles: ' + Object.keys(member._roles));
+console.log('member.roles: ' + JSON.stringify(member.roles));
 	}).catch(console.error);
 }
 
