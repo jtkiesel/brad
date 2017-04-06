@@ -52,7 +52,12 @@ console.log('hello');
 				var member = message.member;
 console.log('member: ' + Object.keys(member));
 console.log('member: ' + Object.values(member));
-				member.setNickname('hello');//name + ' | ' + teamId);
+				//member.setNickname('hello');//name + ' | ' + teamId);
+				setNickname(message.guild, 'hello', message.author, (err) => {
+					if (err) {
+						throw err;
+					}
+				});
 console.log('nickname: ' + member.nickname);
 				setRole(member);
 			}
