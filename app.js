@@ -30,12 +30,14 @@ console.log('teamId: ' + teamId);
 console.log('division: ' + division);
 	member.removeRoles(member.roles);//Object.values(roleIds));
 console.log('member.roles: ' + Object.keys(member.roles));
-	if (Object.keys(roleIds).indexOf(division) > -1) {
-		member.addRole(roleIds[division]);
-	} else {
-		member.addRole(roleIds['Non-Competitor']);
+	if (Object.keys(roleIds).indexOf(division) < 0) {
+		division = 'Non-Competitor';
 	}
+	member.addRole(roleIds[division]).then(user => {
 console.log('member.roles: ' + Object.keys(member.roles));
+	}).catch(() => {
+		console.log('Promise rejected 2');
+	});
 }
 
 client.on('ready', () => {
