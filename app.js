@@ -21,7 +21,7 @@ fs.readFile(__dirname + '/divisions.csv', 'utf8', (err, data) => {
 	}
 });
 
-function setRole(member) {
+function setDivision(member) {
 	var teamId = member.nickname.split(' | ')[1];
 	var division = divisions[teamId];
 console.log('teamId: ' + teamId);
@@ -32,7 +32,7 @@ console.log('member.roles: ' + Object.keys(member.roles));
 		division = 'NonCompetitor';
 	}
 console.log('role: ' + division + ': ' + roleIds[division]);
-	member.addRole(division).then(() => {
+	member.addRole(member.guild.roles.get('name', division)).then(() => {
 console.log('member.roles: ' + Object.keys(member.roles));
 	}).catch(console.error);
 }
@@ -52,7 +52,7 @@ client.on('message', message => {
 			if (/^([0-9]{1,5}[A-Z]?|[A-Z]{2,6}[0-9]{0,2})$/.test(teamId)) {
 				message.member.setNickname(name + ' | ' + teamId).then(() => {
 console.log('nickname: ' + message.member.nickname);
-					setRole(message.member);
+					setDivision(message.member);
 				}).catch(console.error);
 			}
 		}
