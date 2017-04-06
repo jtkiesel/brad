@@ -41,12 +41,12 @@ console.log('member.roles: ' + JSON.stringify(member.roles));
 	}).catch(console.error);
 }
 */
-client.once('ready', () => {
+client.on('ready', () => {
 	console.log('I am ready!');
 });
 
 client.on('message', message => {
-	message.member.setNickname('test').then(() => {
+	message.member.setNickname('test2').then(() => {
 		message.reply(message.member.nickname);
 	});
 /*	if (message.channel.name === 'verify') {
