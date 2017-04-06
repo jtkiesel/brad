@@ -56,7 +56,7 @@ client.on('message', message => {
 			if (/^([0-9]{1,5}[A-Z]?|[A-Z]{2,6}[0-9]{0,2})$/.test(teamId)) {
 				nickname = name + ' | ' + teamId;
 				message.member.setNickname(nickname);
-console.log('nickname: ' + member.nickname);
+console.log('nickname: ' + nickname);
 				setDivision(member, nickname);
 			}
 		}
