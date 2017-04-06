@@ -31,10 +31,11 @@ console.log('member.roles: ' + Object.keys(member.roles));
 	if (Object.keys(roleIds).indexOf(division) < 0) {
 		division = 'NonCompetitor';
 	}
-console.log('role: ' + JSON.stringify(member.guild.roles.get('name', division)));
-	member.addRole(member.guild.roles.get('name', 'Technology')).then(() => {
+	var role = member.guild.roles.get('name', division).then(() => {
+		member.addRole(role).then(() => {
 console.log('member: ' + Object.keys(member));
 console.log('member.roles: ' + Object.keys(member.roles));
+		}).catch(console.error);
 	}).catch(console.error);
 }
 
