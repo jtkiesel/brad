@@ -31,9 +31,9 @@ console.log('division: ' + division);
 	member.removeRoles(member.roles);//Object.values(roleIds));
 console.log('member.roles: ' + Object.keys(member.roles));
 	if (Object.keys(roleIds).indexOf(division) > -1) {
-		member.addRole(member.guild.roles.find({name: division}));
+		member.addRole(roleIds[division]);
 	} else {
-		member.addRole(member.guild.roles.find({name: 'Non-Competitor'}));
+		member.addRole(roleIds['Non-Competitor']);
 	}
 console.log('member.roles: ' + Object.keys(member.roles));
 }
