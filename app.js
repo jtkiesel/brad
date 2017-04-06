@@ -47,19 +47,13 @@ client.on('message', message => {
 		if (nickname.length == 2) {
 			var name = nickname[0];
 			var teamId = nickname[1].toUpperCase();
-console.log('hello');
+
 			if (/^([0-9]{1,5}[A-Z]?|[A-Z]{2,6}[0-9]{0,2})$/.test(teamId)) {
-				var member = message.member;
-console.log('member: ' + Object.keys(member));
-console.log('member: ' + Object.values(member));
-				message.member.setNickname('hello').then(user => {//name + ' | ' + teamId);
-//				message.guild.member(client.user).setNickname('hello', (err) => {
-//					if (err) {
-//						throw err;
-//					}
-//				});
-console.log('nickname: ' + member.nickname);
-					setRole(member);
+				message.member.setNickname(name + ' | ' + teamId).then(user => {
+console.log('nickname: ' + message.member.nickname);
+					setRole(message.member);
+				}).catch(() => {
+					console.log('Promise rejected');
 				});
 			}
 		}
