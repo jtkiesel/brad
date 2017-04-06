@@ -24,14 +24,16 @@ fs.readFile(__dirname + '/divisions.csv', 'utf8', (err, data) => {
 function setRole(member) {
 	var teamId = member.nickname.split(' | ')[1];
 	var division = divisions[teamId];
-
+console.log('teamId: ' + teamId);
+console.log('division: ' + division;
 	member.removeRoles(Object.values(roleIds));
-
-	if (division in Object.keys(roleIds)) {
-		member.addRole(member.guild.roles.get(division));
+console.log('member.roles: ' + Object.keys(member.roles));
+	if (division in ['Science', 'Technology', 'Research', 'Engineering', 'Arts', 'Math', 'Spirit', 'Opportunity', 'Design', 'Innovate']) {
+		member.addRole(member.guild.roles.find({name: division}));
 	} else {
-		member.addRole(member.guild.roles.get(roleIds['Non-Competitor']));
+		member.addRole(member.guild.roles.find({name: 'Non-Competitor'}));
 	}
+console.log('member.roles: ' + Object.keys(member.roles));
 }
 
 client.on('ready', () => {
@@ -50,7 +52,7 @@ console.log('hello');
 				var member = message.member;
 console.log('o shit');
 				member.setNickname(name + ' | ' + teamId);
-
+console.log('nickname: ' + member.nickname');
 				setRole(member);
 			}
 		}
