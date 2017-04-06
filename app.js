@@ -32,7 +32,7 @@ console.log('member.roles: ' + Object.keys(member.roles));
 		division = 'NonCompetitor';
 	}
 console.log('role: ' + JSON.stringify(member.guild.roles.get('name', division)));
-	member.addRole(member.guild.roles.get('name', division)).then(() => {
+	member.addRole(member.guild.roles.get('name', 'Technology')).then(() => {
 console.log('member: ' + Object.keys(member));
 console.log('member.roles: ' + Object.keys(member.roles));
 	}).catch(console.error);
