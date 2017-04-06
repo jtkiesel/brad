@@ -46,9 +46,9 @@ client.on('ready', () => {
 });
 
 client.on('message', message => {
-	message.member.setNickname('test2').then(() => {
+//	message.member.setNickname('test2').then(() => {
 		message.reply(message.member.nickname);
-	});
+//	});
 /*	if (message.channel.name === 'verify') {
 		var nickname = message.content.replace(/\s+/g, '').split('|');
 
