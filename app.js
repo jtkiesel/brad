@@ -28,17 +28,17 @@ function setDivision(member, nickname) {
 	if (Object.keys(roleIds).indexOf(division) === -1) {
 		division = 'Non-Competitor';
 	}
-	member.removeRole(roleIds['Science']).then(() => {
-		member.removeRole(roleIds['Technology']).then(() => {
-			member.removeRole(roleIds['Research']).then(() => {
-				member.removeRole(roleIds['Engineering']).then(() => {
-					member.removeRole(roleIds['Arts']).then(() => {
-						member.removeRole(roleIds['Math']).then(() => {
-							member.removeRole(roleIds['Spirit']).then(() => {
-								member.removeRole(roleIds['Opportunity']).then(() => {
-									member.removeRole(roleIds['Design']).then(() => {
-										member.removeRole(roleIds['Innovate']).then(() => {
-											member.removeRole(roleIds['Non-Competitor']).then(() => {
+	member.removeRole(member.guild.roles.find('name', 'Science')).then(() => {
+		member.removeRole(member.guild.roles.find('name', 'Technology')).then(() => {
+			member.removeRole(member.guild.roles.find('name', 'Research')).then(() => {
+				member.removeRole(member.guild.roles.find('name', 'Engineering')).then(() => {
+					member.removeRole(member.guild.roles.find('name', 'Arts')).then(() => {
+						member.removeRole(member.guild.roles.find('name', 'Math')).then(() => {
+							member.removeRole(member.guild.roles.find('name', 'Spirit')).then(() => {
+								member.removeRole(member.guild.roles.find('name', 'Opportunity')).then(() => {
+									member.removeRole(member.guild.roles.find('name', 'Design')).then(() => {
+										member.removeRole(member.guild.roles.find('name', 'Innovate')).then(() => {
+											member.removeRole(member.guild.roles.find('name', 'Non-Competitor')).then(() => {
 												member.addRole(member.guild.roles.find('name', division));
 											}).catch(console.log);
 										}).catch(console.log);
