@@ -28,8 +28,8 @@ function setDivision(member, nickname) {
 	if (Object.keys(roleIds).indexOf(division) === -1) {
 		division = 'Non-Competitor';
 	}
-console.log('roleIds: ' + Object.values(roleIds));
-console.log('roles: ' + Object.keys(member.roles));
+console.log('roleIds: ' + JSON.stringify(roleIds));
+console.log('roles: ' + JSON.stringify(member.roles));
 	var roles = Object.keys(member.roles);
 	roles.filter((x) => {
 		return Object.values(roleIds).indexOf(x) !== -1;
