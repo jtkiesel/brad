@@ -34,7 +34,7 @@ console.log('roles: ' + JSON.stringify(member.roles));
 //	roles.filter((x) => {
 //		return Object.values(roleIds).indexOf(x) !== -1;
 //	});
-console.log('intersection: ' + roles);
+console.log('intersection: ' + JSON.stringify(roles));
 	member.removeRoles(roles).then(() => {
 		member.addRole(member.guild.roles.find('name', division));
 	}).catch(console.log);
