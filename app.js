@@ -28,8 +28,28 @@ function setDivision(member, nickname) {
 	if (Object.keys(roleIds).indexOf(division) === -1) {
 		division = 'Non-Competitor';
 	}
-	member.removeRoles(member.roles).then(() => {
-		member.addRole(member.guild.roles.find('name', division));
+	member.removeRole(roleIds['Science']).then(() => {
+		member.removeRole(roleIds['Technology']).then(() => {
+			member.removeRole(roleIds['Research']).then(() => {
+				member.removeRole(roleIds['Engineering']).then(() => {
+					member.removeRole(roleIds['Arts']).then(() => {
+						member.removeRole(roleIds['Math']).then(() => {
+							member.removeRole(roleIds['Spirit']).then(() => {
+								member.removeRole(roleIds['Opportunity']).then(() => {
+									member.removeRole(roleIds['Design']).then(() => {
+										member.removeRole(roleIds['Innovate']).then(() => {
+											member.removeRole(roleIds['Non-Competitor']).then(() => {
+												member.addRole(member.guild.roles.find('name', division));
+											}).catch(console.log);
+										}).catch(console.log);
+									}).catch(console.log);
+								}).catch(console.log);
+							}).catch(console.log);
+						}).catch(console.log);
+					}).catch(console.log);
+				}).catch(console.log);
+			}).catch(console.log);
+		}).catch(console.log);
 	}).catch(console.log);
 }
 
