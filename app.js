@@ -30,10 +30,10 @@ function setDivision(member, nickname) {
 	}
 console.log('roleIds: ' + JSON.stringify(roleIds));
 console.log('roles: ' + JSON.stringify(member.roles));
-	var roles = Object.keys(member.roles);
-	roles.filter((x) => {
-		return Object.values(roleIds).indexOf(x) !== -1;
-	});
+	var roles = Object.values(roleIds);//Object.keys(member.roles);
+//	roles.filter((x) => {
+//		return Object.values(roleIds).indexOf(x) !== -1;
+//	});
 console.log('intersection: ' + roles);
 	member.removeRoles(roles).then(() => {
 		member.addRole(member.guild.roles.find('name', division));
