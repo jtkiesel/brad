@@ -24,16 +24,19 @@ fs.readFile(__dirname + '/divisions.csv', 'utf8', (err, data) => {
 function setDivision(member, nickname) {
 	var teamId = nickname.split(' | ')[1];
 	var division = divisions[teamId];
+	var roles = [];
 
 	if (Object.keys(roleIds).indexOf(division) === -1) {
 		division = 'Non-Competitor';
 	}
 console.log('roleIds: ' + JSON.stringify(roleIds));
 console.log('roles: ' + JSON.stringify(member.roles));
-	var roles = Object.values(roleIds);//Object.keys(member.roles);
-//	roles.filter((x) => {
-//		return Object.values(roleIds).indexOf(x) !== -1;
-//	});
+	for (var i = 0; i < roleIds.length; i++) {
+		var role = member.roles.find('name', Object.keys(roleIds)[i]);
+		if (role) {
+			roles.push(role);
+		}
+	}
 console.log('intersection: ' + JSON.stringify(roles));
 	member.removeRoles(roles).then(() => {
 		member.addRole(member.guild.roles.find('name', division));
