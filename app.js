@@ -24,20 +24,12 @@ fs.readFile(__dirname + '/divisions.csv', 'utf8', (err, data) => {
 function setDivision(member, nickname) {
 	var teamId = nickname.split(' | ')[1];
 	var division = divisions[teamId];
-console.log('teamId: ' + teamId);
-console.log('division: ' + division);
-	member.removeRoles(member.roles || []);//Object.values(roleIds));
-//console.log('member.roles: ' + Object.keys(member.roles));
-	if (Object.keys(roleIds).indexOf(division) < 0) {
-		division = 'NonCompetitor';
-	}
-console.log('roles: ' + JSON.stringify(member.guild.roles));
-	var role = member.guild.roles.find('name', division);
-console.log('role: ' + JSON.stringify(role));
-	member.addRole(role).then(() => {
-//console.log('member: ' + Object.keys(member));
-console.log('member: ' + Object.values(member));
-//console.log('member.roles: ' + JSON.stringify(member.roles));
+
+	member.removeRoles(member.roles || []).then(() => {
+		if (Object.keys(roleIds).indexOf(division) < 0) {
+			division = 'NonCompetitor';
+		}
+		member.addRole(member.guild.roles.find('name', division));
 	}).catch(console.error);
 }
 
