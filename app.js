@@ -25,12 +25,18 @@ function setDivision(member, nickname) {
 	var teamId = nickname.split(' | ')[1];
 	var division = divisions[teamId];
 
-	if (Object.keys(roleIds).indexOf(division) < 0) {
+	if (Object.keys(roleIds).indexOf(division) === -1) {
 		division = 'Non-Competitor';
 	}
-	member.removeRoles(Object.values(roleIds)).then(() => {
+console.log('roleIds: ' + Object.values(roleIds));
+	var roles = Object.keys(member.roles);
+	roles.filter((x) => {
+		return Object.values(roleIds).indexOf(x) !== -1;
+	});
+console.log('intersection: ' + roles);
+	member.removeRoles(roles).then(() => {
 		member.addRole(member.guild.roles.find('name', division));
-	}).catch(console.error);
+	}).catch(console.log);
 }
 
 client.on('ready', () => {
