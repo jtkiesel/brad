@@ -55,13 +55,11 @@ client.on('message', message => {
 			http.get('http://docs.google.com/spreadsheets/d/1I3FHUlRP5DOs6hivntTWvBJWw0FAYTgpuR40yJfaRv0/pub?gid=1642287782&single=true&output=csv', (response) => {
 				response.pipe(file);
 				file.on('finish', () => {
-					file.close().then(() => {
-						updateDivisions();
+					updateDivisions();
 
-						for (var member of message.guild.members.values()) {
-							setDivision(member, member.nickname);
-						}
-					});
+					for (var member of message.guild.members.values()) {
+						setDivision(member, member.nickname);
+					}
 				});
 			}).on('error', (error) => {
 				fs.unlink(divisionsFile);
