@@ -91,7 +91,7 @@ client.on('message', message => {
 					} else {
 						message.reply('Sorry, VexDB messed up (Nathan pls).');
 					}
-				}
+				});
 			} else {
 				message.reply('Please enter a valid team ID (example: 1234A, or ABC1).');
 			}
