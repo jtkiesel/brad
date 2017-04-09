@@ -1,23 +1,23 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
 
-const request = require('request');
+const http = require('http');
 const fs = require('fs');
+const request = require('request');
 
 var roles = ['Science', 'Technology', 'Research', 'Engineering', 'Arts', 'Math', 'Spirit', 'Opportunity', 'Design', 'Innovate', 'Non-Competitor'];
 var divisions = {};
+var divisionsFile = __dirname + '/divisions.csv';
 
 function updateDivisions() {
-	fs.readFile(__dirname + '/divisions.csv', 'utf8', (err, data) => {
+	fs.readFile(divisionsFile, 'utf8', (err, data) => {
 		if (err) {
 			throw err;
 		}
 		var teams = data.split('\r\n');
 
-		for (var i = 0; i < teams.length; i++) {
-			var team = teams[i].split(',');
-			var teamId = team[0];
-			var division = team[1];
+		for (var team of teams) {
+			var [teamId, division] = team.split(',');
 			divisions[teamId] = division;
 		}
 	});
@@ -40,29 +40,6 @@ function setDivision(member, nickname) {
 	}
 	removeRoles(member, roles);
 	member.addRole(member.guild.roles.find('name', division));
-/*	member.removeRole(member.guild.roles.find('name', 'Science')).then(() => {
-		member.removeRole(member.guild.roles.find('name', 'Technology')).then(() => {
-			member.removeRole(member.guild.roles.find('name', 'Research')).then(() => {
-				member.removeRole(member.guild.roles.find('name', 'Engineering')).then(() => {
-					member.removeRole(member.guild.roles.find('name', 'Arts')).then(() => {
-						member.removeRole(member.guild.roles.find('name', 'Math')).then(() => {
-							member.removeRole(member.guild.roles.find('name', 'Spirit')).then(() => {
-								member.removeRole(member.guild.roles.find('name', 'Opportunity')).then(() => {
-									member.removeRole(member.guild.roles.find('name', 'Design')).then(() => {
-										member.removeRole(member.guild.roles.find('name', 'Innovate')).then(() => {
-											member.removeRole(member.guild.roles.find('name', 'Non-Competitor')).then(() => {
-												member.addRole(member.guild.roles.find('name', division));
-											}).catch(console.log);
-										}).catch(console.log);
-									}).catch(console.log);
-								}).catch(console.log);
-							}).catch(console.log);
-						}).catch(console.log);
-					}).catch(console.log);
-				}).catch(console.log);
-			}).catch(console.log);
-		}).catch(console.log);
-	}).catch(console.log);*/
 }
 
 client.on('ready', () => {
@@ -70,7 +47,27 @@ client.on('ready', () => {
 });
 
 client.on('message', message => {
-	if (message.channel.name === 'verify' && message.author != client.user) {
+	if (message.author === client.user) {
+		// Ignore messages from the client itself.
+	} else if (message.member.roles.exists('name', 'admins')) {
+		if (message.content === '!update') {
+			var file = fs.createWriteStream(divisionsFile);
+			http.get('https://docs.google.com/spreadsheets/d/1I3FHUlRP5DOs6hivntTWvBJWw0FAYTgpuR40yJfaRv0/pub?gid=1642287782&single=true&output=csv', (response) {
+				response.pipe(file);
+				file.on('finish', () => {
+					file.close().then(() => {
+						updateDivisions();
+
+						for (var member of message.guild.members.values()) {
+							setDivision(member, member.nickname);
+						}
+					});
+				});
+			}).on('error', (error) => {
+				fs.unlink(divisionsFile);
+			});
+		}
+	} else if (message.channel.name === 'verify') {
 		var nickname = message.content.split('|');
 
 		if (nickname.length == 2) {
@@ -94,8 +91,10 @@ client.on('message', message => {
 					}
 				});
 			} else {
-				message.reply('Please enter a valid team ID (example: 1234A, or ABC1).');
+				message.reply('Please enter a valid team ID (example: ***1234A***, or ***ABC1***).');
 			}
+		} else {
+			message.reply('Incorrect format. Separate name and team ID by a single "|" (example: ***Jordan | 1234A***).
 		}
 	}
 });
