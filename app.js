@@ -39,6 +39,7 @@ function setDivision(member, nickname) {
 		division = 'Non-Competitor';
 	}
 	removeRoles(member, roles);
+	member.addRole(member.guild.roles.find('name', division));
 /*	member.removeRole(member.guild.roles.find('name', 'Science')).then(() => {
 		member.removeRole(member.guild.roles.find('name', 'Technology')).then(() => {
 			member.removeRole(member.guild.roles.find('name', 'Research')).then(() => {
