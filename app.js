@@ -52,7 +52,7 @@ client.on('message', message => {
 	} else if (message.member.roles.exists('name', 'admins')) {
 		if (message.content === '!update') {
 			var file = fs.createWriteStream(divisionsFile);
-			http.get('https://docs.google.com/spreadsheets/d/1I3FHUlRP5DOs6hivntTWvBJWw0FAYTgpuR40yJfaRv0/pub?gid=1642287782&single=true&output=csv', (response) {
+			http.get('https://docs.google.com/spreadsheets/d/1I3FHUlRP5DOs6hivntTWvBJWw0FAYTgpuR40yJfaRv0/pub?gid=1642287782&single=true&output=csv', (response) => {
 				response.pipe(file);
 				file.on('finish', () => {
 					file.close().then(() => {
