@@ -96,7 +96,7 @@ client.on('message', message => {
 				file.on('finish', () => {
 					updateDivisions();
 */
-					setDivisions(message.guild.members.values().slice());
+					setDivisions(Array.from(message.guild.members.values()));
 /*					for (var member of message.guild.members.values()) {
 						var nickname = member.nickname;
 						if (nickname) {
