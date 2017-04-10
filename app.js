@@ -34,31 +34,33 @@ function removeRoles(member, roleNames, callback) {
 }
 
 function setDivision(member, nickname, callback) {
-	var teamId = nickname.split(' | ')[1];
-	var division = divisions[teamId];
+	if (nickname) {
+		var teamId = nickname.split(' | ')[1];
+		var division = divisions[teamId];
 
-	if (roles.indexOf(division) === -1) {
-		division = 'Non-Competitor';
-	}
-	var roleNames = roles.slice();
-	roleNames.splice(roleNames.indexOf(division), 1);
-	removeRoles(member, roleNames, () => {
-		member.addRole(member.guild.roles.find('name', division)).then(() => {
-			callback();
-		}).catch(console.log);
-	});
-/*	member.removeRole(member.guild.roles.find('name', 'Science')).then(() => {
-		member.removeRole(member.guild.roles.find('name', 'Technology')).then(() => {
-			member.removeRole(member.guild.roles.find('name', 'Research')).then(() => {
-				member.removeRole(member.guild.roles.find('name', 'Engineering')).then(() => {
-					member.removeRole(member.guild.roles.find('name', 'Arts')).then(() => {
-						member.removeRole(member.guild.roles.find('name', 'Math')).then(() => {
-							member.removeRole(member.guild.roles.find('name', 'Spirit')).then(() => {
-								member.removeRole(member.guild.roles.find('name', 'Opportunity')).then(() => {
-									member.removeRole(member.guild.roles.find('name', 'Design')).then(() => {
-										member.removeRole(member.guild.roles.find('name', 'Innovate')).then(() => {
-											member.removeRole(member.guild.roles.find('name', 'Non-Competitor')).then(() => {
-												member.addRole(member.guild.roles.find('name', division));
+		if (roles.indexOf(division) === -1) {
+			division = 'Non-Competitor';
+		}
+		var roleNames = roles.slice();
+		roleNames.splice(roleNames.indexOf(division), 1);
+		removeRoles(member, roleNames, () => {
+			member.addRole(member.guild.roles.find('name', division)).then(() => {
+				callback();
+			}).catch(console.log);
+		});
+/*		member.removeRole(member.guild.roles.find('name', 'Science')).then(() => {
+			member.removeRole(member.guild.roles.find('name', 'Technology')).then(() => {
+				member.removeRole(member.guild.roles.find('name', 'Research')).then(() => {
+					member.removeRole(member.guild.roles.find('name', 'Engineering')).then(() => {
+						member.removeRole(member.guild.roles.find('name', 'Arts')).then(() => {
+							member.removeRole(member.guild.roles.find('name', 'Math')).then(() => {
+								member.removeRole(member.guild.roles.find('name', 'Spirit')).then(() => {
+									member.removeRole(member.guild.roles.find('name', 'Opportunity')).then(() => {
+										member.removeRole(member.guild.roles.find('name', 'Design')).then(() => {
+											member.removeRole(member.guild.roles.find('name', 'Innovate')).then(() => {
+												member.removeRole(member.guild.roles.find('name', 'Non-Competitor')).then(() => {
+													member.addRole(member.guild.roles.find('name', division));
+												}).catch(console.log);
 											}).catch(console.log);
 										}).catch(console.log);
 									}).catch(console.log);
@@ -68,8 +70,10 @@ function setDivision(member, nickname, callback) {
 					}).catch(console.log);
 				}).catch(console.log);
 			}).catch(console.log);
-		}).catch(console.log);
-	}).catch(console.log);*/
+		}).catch(console.log);*/
+	} else {
+		callback();
+	}
 }
 
 function setDivisions(members) {
