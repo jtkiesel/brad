@@ -73,10 +73,12 @@ function setDivision(member, nickname, callback) {
 }
 
 function setDivisions(members) {
-	var member = members.shift();
-	setDivision(member, member.nickname, () => {
-		setDivisions(members);
-	});
+	if (members.length > 0) {
+		var member = members.shift();
+		setDivision(member, member.nickname, () => {
+			setDivisions(members);
+		});
+	}
 }
 
 client.on('ready', () => {
@@ -94,7 +96,7 @@ client.on('message', message => {
 				file.on('finish', () => {
 					updateDivisions();
 */
-					setDivisions(message.guild.members.values());
+					setDivisions(message.guild.members.values().slice());
 /*					for (var member of message.guild.members.values()) {
 						var nickname = member.nickname;
 						if (nickname) {
