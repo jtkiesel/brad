@@ -58,7 +58,10 @@ client.on('message', message => {
 					updateDivisions();
 
 					for (var member of message.guild.members.values()) {
-						setDivision(member, member.nickname);
+						var nickname = member.nickname;
+						if (nickname) {
+							setDivision(member, member.nickname);
+						}
 					}
 				});
 			}).on('error', (error) => {
