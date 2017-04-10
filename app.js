@@ -23,26 +23,31 @@ function updateDivisions() {
 	});
 }
 
-function removeRoles(member, roleNames) {
+function removeRoles(member, roleNames, callback) {
 	if (roleNames.length > 0) {
 		member.removeRole(member.guild.roles.find('name', roleNames.shift())).then(() => {
-			removeRoles(member, roleNames);
+			removeRoles(member, roleNames, callback);
 		}).catch(console.log);
+	} else {
+		callback();
 	}
 }
 
-function setDivision(member, nickname) {
+function setDivision(member, nickname, callback) {
 	var teamId = nickname.split(' | ')[1];
 	var division = divisions[teamId];
 
 	if (roles.indexOf(division) === -1) {
 		division = 'Non-Competitor';
 	}
-/*	var roleNames = roles.slice();
+	var roleNames = roles.slice();
 	roleNames.splice(roleNames.indexOf(division), 1);
-	removeRoles(member, roleNames);
-	member.addRole(member.guild.roles.find('name', division));*/
-	member.removeRole(member.guild.roles.find('name', 'Science')).then(() => {
+	removeRoles(member, roleNames, () => {
+		member.addRole(member.guild.roles.find('name', division)).then(() => {
+			callback();
+		}).catch(console.log);
+	});
+/*	member.removeRole(member.guild.roles.find('name', 'Science')).then(() => {
 		member.removeRole(member.guild.roles.find('name', 'Technology')).then(() => {
 			member.removeRole(member.guild.roles.find('name', 'Research')).then(() => {
 				member.removeRole(member.guild.roles.find('name', 'Engineering')).then(() => {
@@ -64,7 +69,14 @@ function setDivision(member, nickname) {
 				}).catch(console.log);
 			}).catch(console.log);
 		}).catch(console.log);
-	}).catch(console.log);
+	}).catch(console.log);*/
+}
+
+function setDivisions(members) {
+	var member = members.shift();
+	setDivision(member, member.nickname, () => {
+		setDivisions(members);
+	});
 }
 
 client.on('ready', () => {
@@ -82,12 +94,13 @@ client.on('message', message => {
 				file.on('finish', () => {
 					updateDivisions();
 */
-					for (var member of message.guild.members.values()) {
+					setDivisions(message.guild.members.values());
+/*					for (var member of message.guild.members.values()) {
 						var nickname = member.nickname;
 						if (nickname) {
 							setDivision(member, member.nickname);
 						}
-					}
+					}*/
 /*				});
 			}).on('error', (error) => {
 				fs.unlink(divisionsFile);
@@ -108,7 +121,7 @@ client.on('message', message => {
 						if (body.size > 0) {
 							nickname = name + ' | ' + teamId;
 							message.member.setNickname(nickname);
-							setDivision(message.member, nickname);
+							setDivision(message.member, nickname, () => {});
 						} else {
 							message.reply('That team ID does not exist.');
 						}
