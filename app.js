@@ -38,10 +38,33 @@ function setDivision(member, nickname) {
 	if (roles.indexOf(division) === -1) {
 		division = 'Non-Competitor';
 	}
-	var roleNames = roles.slice();
+/*	var roleNames = roles.slice();
 	roleNames.splice(roleNames.indexOf(division), 1);
 	removeRoles(member, roleNames);
-	member.addRole(member.guild.roles.find('name', division));
+	member.addRole(member.guild.roles.find('name', division));*/
+	member.removeRole(member.guild.roles.find('name', 'Science')).then(() => {
+		member.removeRole(member.guild.roles.find('name', 'Technology')).then(() => {
+			member.removeRole(member.guild.roles.find('name', 'Research')).then(() => {
+				member.removeRole(member.guild.roles.find('name', 'Engineering')).then(() => {
+					member.removeRole(member.guild.roles.find('name', 'Arts')).then(() => {
+						member.removeRole(member.guild.roles.find('name', 'Math')).then(() => {
+							member.removeRole(member.guild.roles.find('name', 'Spirit')).then(() => {
+								member.removeRole(member.guild.roles.find('name', 'Opportunity')).then(() => {
+									member.removeRole(member.guild.roles.find('name', 'Design')).then(() => {
+										member.removeRole(member.guild.roles.find('name', 'Innovate')).then(() => {
+											member.removeRole(member.guild.roles.find('name', 'Non-Competitor')).then(() => {
+												member.addRole(member.guild.roles.find('name', division));
+											}).catch(console.log);
+										}).catch(console.log);
+									}).catch(console.log);
+								}).catch(console.log);
+							}).catch(console.log);
+						}).catch(console.log);
+					}).catch(console.log);
+				}).catch(console.log);
+			}).catch(console.log);
+		}).catch(console.log);
+	}).catch(console.log);
 }
 
 client.on('ready', () => {
@@ -53,22 +76,22 @@ client.on('message', message => {
 		// Ignore messages from the client itself.
 	} else if (message.member.roles.exists('name', 'admins')) {
 		if (message.content === '!update') {
-			var file = fs.createWriteStream(divisionsFile);
-			http.get('http://docs.google.com/spreadsheets/d/1I3FHUlRP5DOs6hivntTWvBJWw0FAYTgpuR40yJfaRv0/pub?gid=1642287782&single=true&output=csv', (response) => {
+/*			var file = fs.createWriteStream(divisionsFile);
+			http.get('http://docs.google.com/spreadsheets/d/1I3FHUlRP5DOs6hivntTWvBJWw0FAYTgpuR40yJfaRv0/pub?gid=1642287782&amp;single=true&amp;output=csv', (response) => {
 				response.pipe(file);
 				file.on('finish', () => {
 					updateDivisions();
-
+*/
 					for (var member of message.guild.members.values()) {
 						var nickname = member.nickname;
 						if (nickname) {
 							setDivision(member, member.nickname);
 						}
 					}
-				});
+/*				});
 			}).on('error', (error) => {
 				fs.unlink(divisionsFile);
-			});
+			});*/
 		}
 	} else if (message.channel.name === 'verify') {
 		var nickname = message.content.split('|');
