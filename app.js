@@ -34,7 +34,7 @@ function removeRoles(member, roleNames, callback) {
 }
 
 function setDivision(member, nickname, callback) {
-	if (nickname) {
+	if (nickname && nickname.indexOf(' | ') !== -1) {
 		var teamId = nickname.split(' | ')[1];
 		var division = divisions[teamId];
 
@@ -79,7 +79,7 @@ function setDivision(member, nickname, callback) {
 function setDivisions(members) {
 	if (members.length > 0) {
 		var member = members.shift();
-		setDivision(member, member.nickname, () => {
+		setDivision(member, member.displayName(), () => {
 			setDivisions(members);
 		});
 	}
