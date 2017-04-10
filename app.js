@@ -95,10 +95,10 @@ client.on('message', message => {
 					}
 				});
 			} else {
-				message.reply('Please enter a valid team ID (example: ***1234A***, or ***ABC1***).');
+				message.reply('Please enter a valid team ID (example: **1234A**, or **ABC1**).');
 			}
 		} else {
-			message.reply('Incorrect format. Separate name and team ID by a single "|" (example: ***Jordan | 1234A***).');
+			message.reply('Incorrect format. Separate name and team ID by a single "|" (example: **Jordan | 1234A**).');
 		}
 	}
 });
