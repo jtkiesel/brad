@@ -24,6 +24,7 @@ function updateDivisions() {
 }
 
 function removeRoles(member, roleNames) {
+	console.log(roleNames);
 	if (roleNames.length > 0) {
 		member.removeRole(member.guild.roles.find('name', roleNames.shift())).then(() => {
 			removeRoles(member, roleNames);
