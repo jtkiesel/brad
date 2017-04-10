@@ -39,7 +39,9 @@ function setDivision(member, nickname) {
 	if (roles.indexOf(division) === -1) {
 		division = 'Non-Competitor';
 	}
-	removeRoles(member, roles.slice().splice(roles.indexOf(division), 1));
+	var roleNames = roles.slice();
+	roleNames.splice(roleNames.indexOf(division), 1);
+	removeRoles(member, roleNames);
 	member.addRole(member.guild.roles.find('name', division));
 }
 
