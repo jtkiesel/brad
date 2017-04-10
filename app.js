@@ -79,7 +79,7 @@ function setDivision(member, nickname, callback) {
 function setDivisions(members) {
 	if (members.length > 0) {
 		var member = members.shift();
-		setDivision(member, member.displayName(), () => {
+		setDivision(member, member.displayName, () => {
 			setDivisions(members);
 		});
 	}
