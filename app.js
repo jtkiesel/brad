@@ -1,25 +1,20 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
 
-const http = require('http');
-const fs = require('fs');
 const request = require('request');
 
 var roles = ['Science', 'Technology', 'Research', 'Engineering', 'Arts', 'Math', 'Spirit', 'Opportunity', 'Design', 'Innovate', 'Non-Competitor'];
 var divisions = {};
-var divisionsFile = __dirname + '/divisions.csv';
 
 function updateDivisions() {
-	fs.readFile(divisionsFile, 'utf8', (err, data) => {
-		if (err) {
-			throw err;
-		}
-		var teams = data.split('\r\n');
+	request('http://docs.google.com/spreadsheets/d/1I3FHUlRP5DOs6hivntTWvBJWw0FAYTgpuR40yJfaRv0/pub?gid=1642287782&single=true&output=csv', (error, response, body) => {
+		var teams = body.split('\r\n');
 
 		for (var team of teams) {
 			var [teamId, division] = team.split(',');
 			divisions[teamId] = division;
 		}
+		setDivisions(Array.from(message.guild.members.values()));
 	});
 }
 
@@ -48,29 +43,6 @@ function setDivision(member, nickname, callback) {
 				callback();
 			}).catch(console.log);
 		});
-/*		member.removeRole(member.guild.roles.find('name', 'Science')).then(() => {
-			member.removeRole(member.guild.roles.find('name', 'Technology')).then(() => {
-				member.removeRole(member.guild.roles.find('name', 'Research')).then(() => {
-					member.removeRole(member.guild.roles.find('name', 'Engineering')).then(() => {
-						member.removeRole(member.guild.roles.find('name', 'Arts')).then(() => {
-							member.removeRole(member.guild.roles.find('name', 'Math')).then(() => {
-								member.removeRole(member.guild.roles.find('name', 'Spirit')).then(() => {
-									member.removeRole(member.guild.roles.find('name', 'Opportunity')).then(() => {
-										member.removeRole(member.guild.roles.find('name', 'Design')).then(() => {
-											member.removeRole(member.guild.roles.find('name', 'Innovate')).then(() => {
-												member.removeRole(member.guild.roles.find('name', 'Non-Competitor')).then(() => {
-													member.addRole(member.guild.roles.find('name', division));
-												}).catch(console.log);
-											}).catch(console.log);
-										}).catch(console.log);
-									}).catch(console.log);
-								}).catch(console.log);
-							}).catch(console.log);
-						}).catch(console.log);
-					}).catch(console.log);
-				}).catch(console.log);
-			}).catch(console.log);
-		}).catch(console.log);*/
 	} else {
 		callback();
 	}
@@ -94,23 +66,7 @@ client.on('message', message => {
 		// Ignore messages from the client itself.
 	} else if (message.member.roles.exists('name', 'admins')) {
 		if (message.content === '!update') {
-/*			var file = fs.createWriteStream(divisionsFile);
-			http.get('http://docs.google.com/spreadsheets/d/1I3FHUlRP5DOs6hivntTWvBJWw0FAYTgpuR40yJfaRv0/pub?gid=1642287782&amp;single=true&amp;output=csv', (response) => {
-				response.pipe(file);
-				file.on('finish', () => {
-					updateDivisions();
-*/
-					setDivisions(Array.from(message.guild.members.values()));
-/*					for (var member of message.guild.members.values()) {
-						var nickname = member.nickname;
-						if (nickname) {
-							setDivision(member, member.nickname);
-						}
-					}*/
-/*				});
-			}).on('error', (error) => {
-				fs.unlink(divisionsFile);
-			});*/
+			updateDivisions();
 		}
 	} else if (message.channel.name === 'verify') {
 		var nickname = message.content.split('|');
