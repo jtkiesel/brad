@@ -14,9 +14,7 @@ function updateDivisions(callback) {
 			var [teamId, division] = team.split(',');
 			divisions[teamId] = division;
 		}
-		if (callback) {
-			callback();
-		}
+		callback();
 	});
 }
 
@@ -68,7 +66,9 @@ client.on('message', message => {
 		// Ignore messages from the client itself.
 	} else if (message.member.roles.exists('name', 'admins')) {
 		if (message.content === '!update') {
-			updateDivisions(setDivisions(Array.from(message.guild.members.values())));
+			updateDivisions(() => {
+				setDivisions(Array.from(message.guild.members.values()))
+			});
 		}
 	} else if (message.channel.name === 'verify') {
 		var nickname = message.content.split('|');
