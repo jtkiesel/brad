@@ -14,7 +14,9 @@ function updateDivisions(callback) {
 			var [teamId, division] = team.split(',');
 			divisions[teamId] = division;
 		}
-		callback();
+		if (callback) {
+			callback();
+		}
 	});
 }
 
