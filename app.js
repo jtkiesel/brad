@@ -6,7 +6,7 @@ const request = require('request');
 var roles = ['Science', 'Technology', 'Research', 'Engineering', 'Arts', 'Math', 'Spirit', 'Opportunity', 'Design', 'Innovate', 'Non-Competitor'];
 var divisions = {};
 
-function updateDivisions() {
+function updateDivisions(callback) {
 	request('http://docs.google.com/spreadsheets/d/1I3FHUlRP5DOs6hivntTWvBJWw0FAYTgpuR40yJfaRv0/pub?gid=1642287782&single=true&output=csv', (error, response, body) => {
 		var teams = body.split('\r\n');
 
@@ -14,7 +14,7 @@ function updateDivisions() {
 			var [teamId, division] = team.split(',');
 			divisions[teamId] = division;
 		}
-		setDivisions(Array.from(client.guilds[0].members.values()));
+		callback();
 	});
 }
 
@@ -66,7 +66,7 @@ client.on('message', message => {
 		// Ignore messages from the client itself.
 	} else if (message.member.roles.exists('name', 'admins')) {
 		if (message.content === '!update') {
-			updateDivisions();
+			updateDivisions(setDivisions(Array.from(client.guilds[0].members.values())));
 		}
 	} else if (message.channel.name === 'verify') {
 		var nickname = message.content.split('|');
@@ -100,6 +100,6 @@ client.on('message', message => {
 	}
 });
 
-updateDivisions();
+updateDivisions(() => {});
 
 client.login('Bot Mjk5MjczNjQ1MjE2MzY2NTky.C8bf0A.2xG6kiAxG569srFSvWqKQBhQHIM');
