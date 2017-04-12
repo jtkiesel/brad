@@ -66,7 +66,7 @@ client.on('message', message => {
 		// Ignore messages from the client itself.
 	} else if (message.member.roles.exists('name', 'admins')) {
 		if (message.content === '!update') {
-			updateDivisions(setDivisions(Array.from(client.guilds[0].members.values())));
+			updateDivisions(setDivisions(Array.from(message.guild.members.values())));
 		}
 	} else if (message.channel.name === 'verify') {
 		var nickname = message.content.split('|');
