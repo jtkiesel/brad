@@ -14,7 +14,7 @@ function updateDivisions() {
 			var [teamId, division] = team.split(',');
 			divisions[teamId] = division;
 		}
-		setDivisions(Array.from(message.guild.members.values()));
+		setDivisions(Array.from(client.guilds[0].members.values()));
 	});
 }
 
