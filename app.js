@@ -34,7 +34,7 @@ const setDivision = async (member, nickname) => {
 	let roleNames = roles.slice();
 	roleNames.splice(roleNames.indexOf(division), 1);
 
-	let removeRoles = []
+	let removeRoles = [];
 	for (let role of roleNames) {
 		removeRoles.push(member.guild.roles.find('name', role));
 	}
@@ -49,7 +49,7 @@ client.on('ready', () => {
 client.on('error', console.error);
 
 client.on('guildMemberAdd', member => {
-	member.guild.systemChannel.send(`Welcome, ${member}! To access this server, <@420418365853663255> must verify you.\nPlease take a moment to read our server <#291747463272988673>, then send a message here with your name (or username) and team ID (such as "Kayley | 24B" or "Jordan | BNS"), and/or ask one of the <@&291768070811156481> for help.`);
+	member.guild.channels.find('name', 'new-members').send(`Welcome, ${member}! To access this server, you must be verified.\nPlease take a moment to read our server <#291747463272988673>, then send a message here with your name (or username) and team ID (such as "Kayley | 24B" or "Jordan | BNS"), and/or ask one of the <@&291768070811156481> for help.`);
 });
 
 client.on('message', message => {
