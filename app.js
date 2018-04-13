@@ -13,7 +13,6 @@ const updateDivisions = callback => {
 		for (let team of teams) {
 			let [teamId, division] = team.split(',');
 			divisions[teamId] = division;
-			console.log(divisions[teamId]);
 		}
 		callback();
 	});
@@ -21,7 +20,7 @@ const updateDivisions = callback => {
 
 const setDivision = async (member, nickname) => {
 	if (!nickname || nickname.indexOf(' | ') === -1) {
-		console.log('Invalid nickname.');
+		console.log(`Invalid nickname: "${nickname}"`);
 		return;
 	}
 	let teamId = nickname.split(' | ')[1];
@@ -83,7 +82,7 @@ client.on('message', message => {
 						if (body.size > 0) {
 							nickname = name + ' | ' + teamId;
 							message.member.setNickname(nickname);
-							await setDivision(message.member, nickname, () => {});
+							await setDivision(message.member, nickname);
 						} else {
 							message.reply('That team ID does not exist.');
 						}
