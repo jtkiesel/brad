@@ -1,64 +1,55 @@
 const Discord = require('discord.js');
-const client = new Discord.Client();
-
 const request = require('request');
 
-var roles = ['Science', 'Technology', 'Research', 'Engineering', 'Arts', 'Math', 'Spirit', 'Opportunity', 'Design', 'Innovate', 'Non-Competitor'];
-var divisions = {};
+const client = new Discord.Client();
+const token = process.env.BRAD_TOKEN;
 
-function updateDivisions(callback) {
-	request('http://docs.google.com/spreadsheets/d/1I3FHUlRP5DOs6hivntTWvBJWw0FAYTgpuR40yJfaRv0/pub?gid=1642287782&single=true&output=csv', (error, response, body) => {
-		var teams = body.split('\r\n');
+const roles = ['Science', 'Technology', 'Research', 'Engineering', 'Arts', 'Math', 'Spirit', 'Opportunity', 'Innovate', 'Design', 'Non-Competitor'];
+let divisions = {};
 
-		for (var team of teams) {
-			var [teamId, division] = team.split(',');
+const updateDivisions = callback => {
+	request('https://docs.google.com/spreadsheets/d/e/2PACX-1vT7oa4nLw7lWFOXAI2nJoT2wXqGihFINeeqWcDlcWHu3nYo4gYph5LFXYRwfU1sfNbmKyf_9td8aq7S/pub?gid=0&single=true&output=csv', (error, response, body) => {
+		let teams = body.split('\r\n');
+		for (let team of teams) {
+			let [teamId, division] = team.split(',');
 			divisions[teamId] = division;
+			console.log(divisions[teamId]);
 		}
 		callback();
 	});
 }
 
-function removeRoles(member, roleNames, callback) {
-	if (roleNames.length > 0) {
-		member.removeRole(member.guild.roles.find('name', roleNames.shift())).then(() => {
-			removeRoles(member, roleNames, callback);
-		}).catch(console.log);
-	} else {
-		callback();
+const setDivision = async (member, nickname) => {
+	if (!nickname || nickname.indexOf(' | ') === -1) {
+		console.log('Invalid nickname.');
+		return;
 	}
-}
+	let teamId = nickname.split(' | ')[1];
+	let division = divisions[teamId];
 
-function setDivision(member, nickname, callback) {
-	if (nickname && nickname.indexOf(' | ') !== -1) {
-		var teamId = nickname.split(' | ')[1];
-		var division = divisions[teamId];
-
-		if (roles.indexOf(division) === -1) {
-			division = 'Non-Competitor';
-		}
-		var roleNames = roles.slice();
-		roleNames.splice(roleNames.indexOf(division), 1);
-		removeRoles(member, roleNames, () => {
-			member.addRole(member.guild.roles.find('name', division)).then(() => {
-				callback();
-			}).catch(console.log);
-		});
-	} else {
-		callback();
+	if (roles.indexOf(division) === -1) {
+		division = 'Non-Competitor';
 	}
-}
+	console.log(teamId + ' | ' + division);
+	let roleNames = roles.slice();
+	roleNames.splice(roleNames.indexOf(division), 1);
 
-function setDivisions(members) {
-	if (members.length > 0) {
-		var member = members.shift();
-		setDivision(member, member.displayName, () => {
-			setDivisions(members);
-		});
+	let removeRoles = []
+	for (let role of roleNames) {
+		removeRoles.push(member.guild.roles.find('name', role));
 	}
+	await member.removeRoles(removeRoles);
+	await member.addRole(member.guild.roles.find('name', division));
 }
 
 client.on('ready', () => {
 	console.log('I am ready!');
+});
+
+client.on('error', console.error);
+
+client.on('guildMemberAdd', member => {
+	member.guild.systemChannel.send(`Welcome, ${member}! To access this server, <@420418365853663255> must verify you.\nPlease take a moment to read our server <#291747463272988673>, then send a message here with your name (or username) and team ID (such as "Kayley | 24B" or "Jordan | BNS"), and/or ask one of the <@&291768070811156481> for help.`);
 });
 
 client.on('message', message => {
@@ -66,26 +57,33 @@ client.on('message', message => {
 		// Ignore messages from the client itself.
 	} else if (message.member.roles.exists('name', 'admins')) {
 		if (message.content === '!update') {
-			updateDivisions(() => {
-				setDivisions(Array.from(message.guild.members.values()))
+			console.log('Starting update.');
+			updateDivisions(async () => {
+				let members = Array.from(message.guild.members.values());
+				let i = 0;
+				for (let member of members) {
+					console.log(`Setting division for ${member} (${++i}/${members.length}).`);
+					await setDivision(member, member.displayName);
+				}
+				console.log('DONE SETTING DIVISIONS.');
 			});
 		}
-	} else if (message.channel.name === 'verify') {
-		var nickname = message.content.split('|');
+	} else if (message.channel.name === 'new-members') {
+		let nickname = message.content.split('|');
 
 		if (nickname.length == 2) {
-			var name = nickname[0].trim();
-			var teamId = nickname[1].trim().toUpperCase();
+			let name = nickname[0].trim();
+			let teamId = nickname[1].trim().toUpperCase();
 
 			if (/^([0-9]{1,5}[A-Z]?|[A-Z]{2,6}[0-9]{0,2})$/.test(teamId)) {
-				request('https://api.vexdb.io/v1/get_teams?apike=shNhxcphXlIXQVE2Npeu&team=' + teamId, (error, response, body) => {
+				request('https://api.vexdb.io/v1/get_teams?team=' + teamId, async (error, response, body) => {
 					body = JSON.parse(body);
 
 					if (body.status == 1) {
 						if (body.size > 0) {
 							nickname = name + ' | ' + teamId;
 							message.member.setNickname(nickname);
-							setDivision(message.member, nickname, () => {});
+							await setDivision(message.member, nickname, () => {});
 						} else {
 							message.reply('That team ID does not exist.');
 						}
@@ -104,4 +102,4 @@ client.on('message', message => {
 
 updateDivisions(() => {});
 
-client.login('Bot Mjk5MjczNjQ1MjE2MzY2NTky.C8bf0A.2xG6kiAxG569srFSvWqKQBhQHIM');
+client.login(token);
