@@ -8,7 +8,7 @@ const roles = ['Science', 'Technology', 'Research', 'Engineering', 'Arts', 'Math
 let divisions = {};
 
 const updateDivisions = callback => {
-	request('https://docs.google.com/spreadsheets/d/e/2PACX-1vT7oa4nLw7lWFOXAI2nJoT2wXqGihFINeeqWcDlcWHu3nYo4gYph5LFXYRwfU1sfNbmKyf_9td8aq7S/pub?gid=0&single=true&output=csv', (error, response, body) => {
+	request('https://docs.google.com/spreadsheets/d/e/2PACX-1vT7oa4nLw7lWFOXAI2nJoT2wXqGihFINeeqWcDlcWHu3nYo4gYph5LFXYRwfU1sfNbmKyf_9td8aq7S/pub?gid=1115857977&single=true&output=csv', (error, response, body) => {
 		let teams = body.split('\r\n');
 		for (let team of teams) {
 			let [teamId, division] = team.split(',');
