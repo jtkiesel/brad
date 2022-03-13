@@ -1,1 +1,1 @@
-worker: node app.js
+process: yarn start
