@@ -8,40 +8,88 @@ const client = new Client({
 const rulesChannelId = '291747463272988673';
 const newMembersChannelId = '291772526604976128';
 
+const programs = [
+  {
+    eventId: 45434,
+    divisions: [
+      'Science (MS)',
+      'Technology (MS)',
+      'Engineering (MS)',
+      'Math (MS)',
+    ],
+  },
+  {
+    eventId: 45258,
+    divisions: [
+      'Science (HS)',
+      'Technology (HS)',
+      'Research (HS)',
+      'Engineering (HS)',
+      'Arts (HS)',
+      'Math (HS)',
+      'Physics (HS)',
+      'Automation (HS)',
+    ],
+  },
+  {
+    eventId: 45433,
+    divisions: ['Innovate', 'Design'],
+  },
+];
 const roles = [
-  'Science',
-  'Technology',
-  'Research',
-  'Engineering',
-  'Arts',
-  'Math',
-  'Spirit',
-  'Opportunity',
-  'Innovate',
-  'Design',
+  ...programs.flatMap(({divisions}) => divisions),
   'Non-Competitor',
 ];
-const divisions = new Map<string, string>();
+const divisionByTeam = new Map<string, string>();
 
 const updateDivisions = async () => {
-  const response = await axios.get<string>(
-    'https://docs.google.com/spreadsheets/d/e/2PACX-1vSr3MtY9pUviYmZ5a9r8O1G0XydE5kHAPkN6OerGcI4oT5eO_nZgPbUD2t7feFEs2fhoOyKLtDYlacw/pub?gid=0&single=true&output=csv'
+  const events = await Promise.all(
+    programs.map(async ({eventId, divisions}) => {
+      const teams: string[] = [];
+      let page = 1,
+        lastPage,
+        perPage = 250;
+      do {
+        const {
+          data: {meta, data},
+        } = await axios.get<{
+          meta: {
+            last_page: number;
+            per_page: number;
+          };
+          data: {number: string}[];
+        }>(
+          `https://www.robotevents.com/api/v2/events/${eventId}/teams?per_page=${perPage}&page=${page}`,
+          {
+            headers: {Authorization: `Bearer ${robotEventsToken}`},
+          }
+        );
+        data.forEach(({number}) => teams.push(number));
+        page++;
+        lastPage = meta.last_page;
+        perPage = meta.per_page;
+        console.info('event', eventId, 'page', page, '/', lastPage);
+      } while (page <= lastPage);
+      console.info('event', eventId, 'teams', teams.length);
+      return {divisions, teams};
+    })
   );
-  const teams = response.data.split('\r\n');
-  for (const team of teams) {
-    const [teamId, division] = team.split(',');
-    divisions.set(teamId, division);
-  }
+  divisionByTeam.clear();
+  events.forEach(({divisions, teams}) =>
+    teams.forEach((team, index) =>
+      divisionByTeam.set(team, divisions[index % divisions.length])
+    )
+  );
 };
 
 const setDivision = async (member: GuildMember, nickname: string) => {
   if (!nickname || nickname.indexOf(' | ') === -1) {
-    console.log(`Invalid nickname: "${nickname}"`);
+    console.warn(`Invalid nickname: "${nickname}"`);
     return;
   }
   const teamId = nickname.split(' | ')[1];
-  const division = divisions.get(teamId) ?? 'Non-Competitor';
-  console.log(teamId + ' | ' + division);
+  const division = divisionByTeam.get(teamId) ?? 'Non-Competitor';
+  console.info(teamId + ' | ' + division);
   const roleNames = roles.slice();
   roleNames.splice(roleNames.indexOf(division), 1);
 
@@ -80,7 +128,7 @@ client.on(Constants.Events.MESSAGE_CREATE, async message => {
   }
   if (message.member?.roles.cache.some(({name}) => name === 'admins')) {
     if (message.content === '!update') {
-      console.log('Starting update.');
+      console.info('Starting update.');
       await updateDivisions();
       const membersCollection = await message.guild?.members.fetch();
       if (!membersCollection) {
@@ -89,12 +137,12 @@ client.on(Constants.Events.MESSAGE_CREATE, async message => {
       const members = Array.from(membersCollection.values());
       let i = 0;
       for (const member of members) {
-        console.log(
+        console.info(
           `Setting division for ${member} (${++i}/${members.length}).`
         );
         await setDivision(member, member.displayName);
       }
-      console.log('DONE SETTING DIVISIONS.');
+      console.info('DONE SETTING DIVISIONS.');
     }
   }
   if (message.channel.id === newMembersChannelId) {
@@ -115,16 +163,20 @@ client.on(Constants.Events.MESSAGE_CREATE, async message => {
       );
       return;
     }
-    const response = await axios.get<{meta: {total: number}}>(
-      'https://www.robotevents.com/api/v2/teams?number[]=' + teamId,
+    const {
+      data: {
+        meta: {total},
+      },
+    } = await axios.get<{meta: {total: number}}>(
+      `https://www.robotevents.com/api/v2/teams?number[]=${teamId}`,
       {headers: {Authorization: `Bearer ${robotEventsToken}`}}
     );
 
-    if (response.data.meta.total === 0) {
+    if (total === 0) {
       await message.reply('That team ID does not exist.');
       return;
     }
-    const newNickname = name + ' | ' + teamId;
+    const newNickname = `${name} | ${teamId}`;
     if (!message.member) {
       return;
     }
