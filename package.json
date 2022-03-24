@@ -24,10 +24,8 @@
     "url": "https://github.com/jtkiesel/brad.git"
   },
   "scripts": {
-    "prebuild": "yarn clean",
     "build": "tsc",
     "clean": "rm -fr dist",
-    "predev": "yarn clean",
     "dev": "tsc-watch --onSuccess \"yarn start\"",
     "start": "node dist"
   },

@@ -14,7 +14,9 @@ const programs = [
     divisions: [
       'Science (MS)',
       'Technology (MS)',
+      'Research (MS)',
       'Engineering (MS)',
+      'Arts (MS)',
       'Math (MS)',
     ],
   },
@@ -29,11 +31,13 @@ const programs = [
       'Math (HS)',
       'Physics (HS)',
       'Automation (HS)',
+      'Innovate (HS)',
+      'Design (HS)',
     ],
   },
   {
     eventId: 45433,
-    divisions: ['Innovate', 'Design'],
+    divisions: ['Innovate (VEX U)', 'Design (VEX U)'],
   },
 ];
 const roles = [
