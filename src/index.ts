@@ -18,6 +18,7 @@ const programs = [
       'Engineering (MS)',
       'Arts (MS)',
       'Math (MS)',
+      'Physics (MS)',
     ],
   },
   {
