@@ -12,33 +12,33 @@ const programs = [
   {
     eventId: 45434,
     divisions: [
-      'Research (MS)',
       'Engineering (MS)',
       'Arts (MS)',
-      'Design (MS)',
       'Innovate (MS)',
       'Spirit (MS)',
+      'Design (MS)',
+      'Research (MS)',
       'Opportunity (MS)',
     ],
   },
   {
     eventId: 45258,
     divisions: [
-      'Science (HS)',
+      'Math (HS)',
       'Technology (HS)',
-      'Research (HS)',
+      'Science (HS)',
       'Engineering (HS)',
       'Arts (HS)',
-      'Math (HS)',
-      'Design (HS)',
       'Innovate (HS)',
       'Spirit (HS)',
+      'Design (HS)',
+      'Research (HS)',
       'Opportunity (HS)',
     ],
   },
   {
     eventId: 45433,
-    divisions: ['Science (VEX U)', 'Technology (VEX U)'],
+    divisions: ['Technology (VEX U)', 'Science (VEX U)'],
   },
 ];
 const roles = [
