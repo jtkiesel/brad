@@ -76,13 +76,20 @@ const updateDivisions = async () => {
         console.info('event', eventId, 'page', page, '/', lastPage);
       } while (page <= lastPage);
       console.info('event', eventId, 'teams', teams.length);
-      return {divisions, teams};
+      return {eventId, divisions, teams};
     })
   );
   divisionByTeam.clear();
-  events.forEach(({divisions, teams}) =>
+  events.forEach(({eventId, divisions, teams}) =>
     teams.forEach((team, index) =>
-      divisionByTeam.set(team, divisions[index % divisions.length])
+      divisionByTeam.set(
+        team,
+        divisions[
+          (index -
+            (eventId === 45258 && Number.parseInt(team) >= 55098 ? 1 : 0)) %
+            divisions.length
+        ]
+      )
     )
   );
 };
