@@ -11,6 +11,15 @@ These instructions will get you a copy of the project up and running on your loc
 - [Node.js](https://nodejs.org/)
 - [Yarn](https://yarnpkg.com/)
 
+### Environment Variables
+
+|       Variable       | Required |    Default    |                 Description                 |
+| :------------------: | :------: | :-----------: | :-----------------------------------------: |
+|   `DISCORD_TOKEN`    |    ✓     |               | Token of the Discord account to log in with |
+| `ROBOT_EVENTS_TOKEN` |    ✓     |               |           Robot Events API token            |
+|     `LOG_LEVEL`      |          |    `INFO`     |              Minimum log level              |
+|      `NODE_ENV`      |          | `development` |       Node.JS application environment       |
+
 ### Installing
 
 Install dependencies
@@ -53,13 +62,13 @@ yarn start
 
 ## Versioning
 
-We use [SemVer](https://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/jtkiesel/vexibot/tags).
+We use [SemVer](https://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/jtkiesel/brad/tags).
 
 ## Authors
 
 - **Jordan Kiesel** - [LinkedIn](https://www.linkedin.com/in/jtkiesel/)
 
-See also the list of [contributors](https://github.com/jtkiesel/bracketboi/contributors) who participated in this project.
+See also the list of [contributors](https://github.com/jtkiesel/brad/contributors) who participated in this project.
 
 ## License
 
