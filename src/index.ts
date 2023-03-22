@@ -73,16 +73,7 @@ export const updateDivisions = async () => {
         );
         data.forEach(({number}) => teams.push(number));
         lastPage = meta.last_page;
-        discordClient.logger.info(
-          'event',
-          eventId,
-          'page',
-          page,
-          '/',
-          lastPage
-        );
       } while (page < lastPage);
-      discordClient.logger.info('event', eventId, 'teams', teams.length);
       return {eventId, divisions, teams};
     })
   );
@@ -100,11 +91,7 @@ export const updateRoles = async () => {
   const manageableMembers = Array.from(
     members.filter(member => member.manageable).values()
   );
-  let i = 0;
   for (const member of manageableMembers) {
-    discordClient.logger.info(
-      `Setting division for ${member} (${++i}/${manageableMembers.length})`
-    );
     await setDivision(member, member.displayName);
   }
   discordClient.logger.info('DONE SETTING DIVISIONS');
@@ -118,8 +105,6 @@ export const setDivision = async (member: GuildMember, nickname: string) => {
 
   const teamId = nickname.split(' | ')[1];
   const division = divisionsByTeam.get(teamId) ?? 'Non-Competitor';
-  discordClient.logger.info(teamId + ' | ' + division);
-
   const divisionRole = member.guild.roles.cache.find(
     ({name}) => name === division
   );

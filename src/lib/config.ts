@@ -34,20 +34,20 @@ class Config<T> {
   }
 
   private static parseLogLevel(value?: string) {
-    switch (value?.toUpperCase()) {
-      case 'TRACE':
+    switch (value?.toLowerCase()) {
+      case 'trace':
         return LogLevel.Trace;
-      case 'DEBUG':
+      case 'debug':
         return LogLevel.Debug;
-      case 'INFO':
+      case 'info':
         return LogLevel.Info;
-      case 'WARN':
+      case 'warn':
         return LogLevel.Warn;
-      case 'ERROR':
+      case 'error':
         return LogLevel.Error;
-      case 'FATAL':
+      case 'fatal':
         return LogLevel.Fatal;
-      case 'NONE':
+      case 'none':
         return LogLevel.None;
       case undefined:
         return undefined;

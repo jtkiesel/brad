@@ -1,8 +1,7 @@
 {
   "extends": "@sapphire/ts-config",
   "compilerOptions": {
-    "allowUnreachableCode": false,
-    "allowUnusedLabels": false,
+    "ignoreDeprecations": "5.0",
     "rootDir": "src",
     "outDir": "dist",
     "tsBuildInfoFile": "dist/.tsbuildinfo"
