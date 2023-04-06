@@ -2,7 +2,7 @@ import {ApplyOptions} from '@sapphire/decorators';
 import {Events, Listener} from '@sapphire/framework';
 import axios from 'axios';
 import {inlineCode, type Message} from 'discord.js';
-import {adminRoleId, newMembersChannelId, setDivision} from '../..';
+import {adminRoleId, newMembersChannelId, setRoles} from '../..';
 import {robotEventsToken} from '../../lib/config';
 
 @ApplyOptions<Listener.Options>({event: Events.MessageCreate})
@@ -53,8 +53,7 @@ export class MessageCreateListener extends Listener<
       return;
     }
 
-    const newNickname = `${name} | ${teamId}`;
-    await message.member.setNickname(newNickname);
-    await setDivision(message.member, newNickname);
+    await message.member.setNickname(`${name} | ${teamId}`);
+    await setRoles(message.member);
   }
 }

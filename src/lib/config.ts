@@ -57,7 +57,11 @@ class Config<T> {
   }
 }
 
+export const discordId = Config.string('DISCORD_TOKEN').orElseThrow();
 export const logLevel = Config.logLevel('LOG_LEVEL').orElse(LogLevel.Info);
 export const nodeEnv = Config.string('NODE_ENV').orElse('development');
+export const npmPackageVersion = Config.string(
+  'npm_package_version'
+).orElseThrow();
 export const robotEventsToken =
   Config.string('ROBOT_EVENTS_TOKEN').orElseThrow();

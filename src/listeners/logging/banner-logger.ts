@@ -9,9 +9,7 @@ import {
   white,
   yellow,
 } from 'colorette';
-import {nodeEnv} from '../../lib/config';
-
-const {version} = require('../../../package.json');
+import {nodeEnv, npmPackageVersion} from '../../lib/config';
 
 const dev = nodeEnv === 'development';
 
@@ -28,7 +26,7 @@ export class ClientReadyListener extends Listener<typeof Events.ClientReady> {
     const {logger} = this.container;
     const llc = dev ? magentaBright : white;
     const blc = dev ? magenta : blue;
-    logger.info(blc(version));
+    logger.info(blc(npmPackageVersion));
     logger.info(`[${green('+')}] Gateway`);
 
     if (dev) {
