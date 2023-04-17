@@ -25,16 +25,16 @@ const programs = [
     name: 'VRC HS',
     eventId: 49725,
     divisions: [
-      'Science',
-      'Technology',
-      'Engineering',
       'Math',
+      'Technology',
+      'Science',
+      'Engineering',
       'Arts',
-      'Opportunity',
       'Innovate',
-      'Research',
       'Spirit',
       'Design',
+      'Research',
+      'Opportunity',
     ],
   },
   {
@@ -57,38 +57,38 @@ const programs = [
   {
     name: 'JROTC',
     eventId: 49728,
-    divisions: ['Innovate', 'Spirit'],
+    divisions: ['Spirit', 'Innovate'],
   },
   {
     name: 'VIQC MS',
     eventId: 49729,
     divisions: [
-      'Science',
-      'Technology',
-      'Engineering',
       'Math',
+      'Technology',
+      'Science',
+      'Engineering',
       'Arts',
-      'Opportunity',
       'Innovate',
-      'Research',
       'Spirit',
       'Design',
+      'Research',
+      'Opportunity',
     ],
   },
   {
     name: 'VIQC ES',
     eventId: 49730,
     divisions: [
-      'Science',
-      'Technology',
-      'Engineering',
       'Math',
+      'Technology',
+      'Science',
+      'Engineering',
       'Arts',
-      'Opportunity',
       'Innovate',
-      'Research',
       'Spirit',
       'Design',
+      'Research',
+      'Opportunity',
     ],
   },
 ];
@@ -137,12 +137,13 @@ export const updateRoles = async () => {
   const manageableMembers = Array.from(
     members.filter(member => member.manageable).values()
   );
-  await Promise.all(manageableMembers.map(member => setRoles(member)));
+  await Promise.all(
+    manageableMembers.map(member => setRoles(member, member.displayName))
+  );
   discordClient.logger.info('DONE UPDATING ROLES');
 };
 
-export const setRoles = async (member: GuildMember) => {
-  const nickname = member.displayName;
+export const setRoles = async (member: GuildMember, nickname: string) => {
   if (!nickname || nickname.indexOf(' | ') === -1) {
     discordClient.logger.warn(`Invalid nickname: "${nickname}"`);
     return;
@@ -167,7 +168,7 @@ export const setRoles = async (member: GuildMember) => {
   }
 
   if (!member.roles.cache.hasAll(programRole.id, divisionRole.id)) {
-    await member.roles.set([programRole, divisionRole]);
+    await member.roles.set([...new Set([programRole, divisionRole])]);
   }
 };
 

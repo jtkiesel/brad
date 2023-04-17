@@ -53,7 +53,10 @@ export class MessageCreateListener extends Listener<
       return;
     }
 
-    await message.member.setNickname(`${name} | ${teamId}`);
-    await setRoles(message.member);
+    const newNickname = `${name} | ${teamId}`;
+    await Promise.all([
+      message.member.setNickname(newNickname),
+      setRoles(message.member, newNickname),
+    ]);
   }
 }
