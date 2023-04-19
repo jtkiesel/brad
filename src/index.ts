@@ -54,7 +54,12 @@ const programs = [
 ];
 const divisionsByTeam = new Map<string, string>();
 
-export const updateDivisions = async () => {
+export const update = async () => {
+  await updateDivisions();
+  await updateRoles();
+};
+
+const updateDivisions = async () => {
   const events = await Promise.all(
     programs.map(async ({eventId, divisions}) => {
       const teams: string[] = [];
@@ -84,7 +89,7 @@ export const updateDivisions = async () => {
   );
 };
 
-export const updateRoles = async () => {
+const updateRoles = async () => {
   const guild = await discordClient.guilds.fetch(serverId);
   const members = await guild.members.fetch();
   const manageableMembers = Array.from(
@@ -102,27 +107,29 @@ export const setRoles = async (member: GuildMember, nickname: string) => {
     return;
   }
 
+  const roleNames = ['Verified'];
   const teamId = nickname.split(' | ')[1];
-  const division = divisionsByTeam.get(teamId) ?? 'Non-Competitor';
-  const divisionRole = member.guild.roles.cache.find(
-    ({name}) => name === division
+  const division = divisionsByTeam.get(teamId);
+  if (division) {
+    roleNames.push(division);
+  }
+  const roles = member.guild.roles.cache.filter(({name}) =>
+    roleNames.includes(name)
   );
-  if (!divisionRole) {
+  if (division && roles.size < 2) {
     discordClient.logger.warn(`No role found for division: ${division}`);
     return;
   }
 
-  if (!member.roles.cache.has(divisionRole.id)) {
-    await member.roles.set([divisionRole]);
+  if (!member.roles.cache.hasAll(...roles.keys())) {
+    await member.roles.set(roles);
   }
 };
 
 const main = async () => {
+  discordClient.logger.info('Updating divisions');
   await updateDivisions();
-  setInterval(async () => {
-    await updateDivisions();
-    await updateRoles();
-  }, 600_000);
+  discordClient.logger.info('Updated divisions');
   try {
     discordClient.logger.info('Logging in');
     await discordClient.login();
@@ -132,6 +139,10 @@ const main = async () => {
     discordClient.destroy();
     process.exit(1);
   }
+  discordClient.logger.info('Updating roles');
+  await updateRoles();
+  discordClient.logger.info('Updated roles');
+  setInterval(async () => await update(), 600_000);
 };
 
 main();

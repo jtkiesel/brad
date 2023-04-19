@@ -4,7 +4,7 @@ import {
   PermissionsBitField,
   type ChatInputCommandInteraction,
 } from 'discord.js';
-import {updateDivisions, updateRoles} from '..';
+import {update} from '..';
 
 @ApplyOptions<Command.Options>({
   description: 'Update division roles for all server members',
@@ -27,8 +27,7 @@ export class UpdateCommand extends Command {
       ephemeral: true,
     });
 
-    await updateDivisions();
-    await updateRoles();
+    await update();
   }
 
   public override registerApplicationCommands(registry: Command.Registry) {
