@@ -22,82 +22,41 @@ const discordClient = new SapphireClient({
 
 const programs = [
   {
-    name: 'VRC HS',
     eventId: 49725,
     divisions: [
-      'Math',
-      'Technology',
-      'Science',
-      'Engineering',
-      'Arts',
-      'Innovate',
-      'Spirit',
-      'Design',
-      'Research',
-      'Opportunity',
+      'Math (VRC HS)',
+      'Technology (VRC HS)',
+      'Science (VRC HS)',
+      'Engineering (VRC HS)',
+      'Arts (VRC HS)',
+      'Innovate (VRC HS)',
+      'Spirit (VRC HS)',
+      'Design (VRC HS)',
+      'Research (VRC HS)',
+      'Opportunity (VRC HS)',
     ],
   },
   {
-    name: 'VRC MS',
     eventId: 49726,
     divisions: [
-      'Science',
-      'Technology',
-      'Engineering',
-      'Math',
-      'Arts',
-      'Opportunity',
+      'Science (VRC MS)',
+      'Technology (VRC MS)',
+      'Engineering (VRC MS)',
+      'Math (VRC MS)',
+      'Arts (VRC MS)',
+      'Opportunity (VRC MS)',
     ],
   },
   {
-    name: 'VEX U',
     eventId: 49727,
-    divisions: ['Research', 'Design'],
-  },
-  {
-    name: 'JROTC',
-    eventId: 49728,
-    divisions: ['Spirit', 'Innovate'],
-  },
-  {
-    name: 'VIQC MS',
-    eventId: 49729,
-    divisions: [
-      'Math',
-      'Technology',
-      'Science',
-      'Engineering',
-      'Arts',
-      'Innovate',
-      'Spirit',
-      'Design',
-      'Research',
-      'Opportunity',
-    ],
-  },
-  {
-    name: 'VIQC ES',
-    eventId: 49730,
-    divisions: [
-      'Math',
-      'Technology',
-      'Science',
-      'Engineering',
-      'Arts',
-      'Innovate',
-      'Spirit',
-      'Design',
-      'Research',
-      'Opportunity',
-    ],
+    divisions: ['Research (VEX U)', 'Design (VEX U)'],
   },
 ];
-const programsByTeam = new Map<string, string>();
 const divisionsByTeam = new Map<string, string>();
 
 export const updateDivisions = async () => {
   const events = await Promise.all(
-    programs.map(async ({name, eventId, divisions}) => {
+    programs.map(async ({eventId, divisions}) => {
       const teams: string[] = [];
       let page = 0;
       let lastPage: number;
@@ -114,20 +73,14 @@ export const updateDivisions = async () => {
         data.forEach(({number}) => teams.push(number));
         lastPage = meta.last_page;
       } while (page < lastPage);
-      return {name, divisions, teams};
+      return {divisions, teams};
     })
   );
-  programsByTeam.clear();
   divisionsByTeam.clear();
-  events.forEach(({name, divisions, teams}) =>
-    teams.forEach((team, index) => {
-      if (!programsByTeam.has(team)) {
-        programsByTeam.set(team, name);
-      }
-      if (!divisionsByTeam.has(team)) {
-        divisionsByTeam.set(team, divisions[index % divisions.length]);
-      }
-    })
+  events.forEach(({divisions, teams}) =>
+    teams.forEach((team, index) =>
+      divisionsByTeam.set(team, divisions[index % divisions.length])
+    )
   );
 };
 
@@ -150,25 +103,17 @@ export const setRoles = async (member: GuildMember, nickname: string) => {
   }
 
   const teamId = nickname.split(' | ')[1];
-  const program = programsByTeam.get(teamId) ?? 'Non-Competitor';
   const division = divisionsByTeam.get(teamId) ?? 'Non-Competitor';
-  const programRole = member.guild.roles.cache.find(
-    ({name}) => name === program
-  );
   const divisionRole = member.guild.roles.cache.find(
     ({name}) => name === division
   );
-  if (!programRole) {
-    discordClient.logger.warn(`No role found for program: ${program}`);
-    return;
-  }
   if (!divisionRole) {
     discordClient.logger.warn(`No role found for division: ${division}`);
     return;
   }
 
-  if (!member.roles.cache.hasAll(programRole.id, divisionRole.id)) {
-    await member.roles.set([...new Set([programRole, divisionRole])]);
+  if (!member.roles.cache.has(divisionRole.id)) {
+    await member.roles.set([divisionRole]);
   }
 };
 
