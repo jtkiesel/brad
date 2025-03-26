@@ -1,12 +1,9 @@
-import {LogLevel} from '@sapphire/framework';
-import {config} from 'dotenv';
-
-config();
+import { LogLevel } from "@sapphire/framework";
 
 class Config<T> {
   private constructor(
     private readonly name: string,
-    private readonly value?: T
+    private readonly value?: T,
   ) {}
 
   public static string(name: string) {
@@ -35,19 +32,19 @@ class Config<T> {
 
   private static parseLogLevel(value?: string) {
     switch (value?.toLowerCase()) {
-      case 'trace':
+      case "trace":
         return LogLevel.Trace;
-      case 'debug':
+      case "debug":
         return LogLevel.Debug;
-      case 'info':
+      case "info":
         return LogLevel.Info;
-      case 'warn':
+      case "warn":
         return LogLevel.Warn;
-      case 'error':
+      case "error":
         return LogLevel.Error;
-      case 'fatal':
+      case "fatal":
         return LogLevel.Fatal;
-      case 'none':
+      case "none":
         return LogLevel.None;
       case undefined:
         return undefined;
@@ -57,11 +54,18 @@ class Config<T> {
   }
 }
 
-export const discordId = Config.string('DISCORD_TOKEN').orElseThrow();
-export const logLevel = Config.logLevel('LOG_LEVEL').orElse(LogLevel.Info);
-export const nodeEnv = Config.string('NODE_ENV').orElse('development');
+export const adminRoleId = Config.string("ADMIN_ROLE_ID").orElseThrow();
+export const discordToken = Config.string("DISCORD_TOKEN").orElseThrow();
+export const logLevel = Config.logLevel("LOG_LEVEL").orElse(LogLevel.Info);
+export const newMembersChannelId = Config.string(
+  "NEW_MEMBERS_CHANNEL_ID",
+).orElseThrow();
+export const nodeEnv = Config.string("NODE_ENV").orElse("development");
 export const npmPackageVersion = Config.string(
-  'npm_package_version'
+  "npm_package_version",
 ).orElseThrow();
 export const robotEventsToken =
-  Config.string('ROBOT_EVENTS_TOKEN').orElseThrow();
+  Config.string("ROBOT_EVENTS_TOKEN").orElseThrow();
+export const rulesChannelId = Config.string("RULES_CHANNEL_ID").orElseThrow();
+export const serverId = Config.string("SERVER_ID").orElseThrow();
+export const vexWorldsFile = Config.string("VEX_WORLDS_FILE").orElseThrow();

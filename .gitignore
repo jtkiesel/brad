@@ -1,5 +1,4 @@
 # dependencies
-/.yarn/install-state.gz
 /node_modules
 
 # production
@@ -10,3 +9,6 @@
 
 # IDE
 /.vscode
+
+# misc
+.DS_Store

@@ -1,15 +1,19 @@
-import {ApplyOptions} from '@sapphire/decorators';
-import {Events, Listener} from '@sapphire/framework';
+import { ApplyOptions } from "@sapphire/decorators";
+import { Events, Listener } from "@sapphire/framework";
 import {
-  channelMention,
   ChannelType,
+  channelMention,
   inlineCode,
   roleMention,
   type GuildMember,
-} from 'discord.js';
-import {adminRoleId, newMembersChannelId, rulesChannelId} from '../..';
+} from "discord.js";
+import {
+  adminRoleId,
+  newMembersChannelId,
+  rulesChannelId,
+} from "../../lib/config.js";
 
-@ApplyOptions<Listener.Options>({event: Events.GuildMemberAdd})
+@ApplyOptions<Listener.Options>({ event: Events.GuildMemberAdd })
 export class GuildMemberAddListener extends Listener<
   typeof Events.GuildMemberAdd
 > {
@@ -21,12 +25,12 @@ export class GuildMemberAddListener extends Listener<
 
     newMembers.send(
       `Welcome, ${member}! To access this server, you must be verified.\nPlease take a moment to read our server ${channelMention(
-        rulesChannelId
+        rulesChannelId,
       )}, then send a message here with your name (or preferred nickname) and team ID (such as ${inlineCode(
-        'Kayley | 24B'
-      )} or ${inlineCode('Jordan | BNS')}), or ask one of the ${roleMention(
-        adminRoleId
-      )} for help.`
+        "Kayley | 24B",
+      )} or ${inlineCode("Jordan | BNS")}), or ask one of the ${roleMention(
+        adminRoleId,
+      )} for help.`,
     );
   }
 }

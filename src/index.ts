@@ -1,57 +1,26 @@
-import {SapphireClient} from '@sapphire/framework';
-import '@sapphire/plugin-logger/register';
-import axios from 'axios';
-import {GatewayIntentBits, type GuildMember} from 'discord.js';
-import {logLevel, robotEventsToken} from './lib/config';
-
-export const serverId = '291747463272988673';
-export const adminRoleId = '291768070811156481';
-export const rulesChannelId = '291747463272988673';
-export const newMembersChannelId = '291772526604976128';
+import { SapphireClient } from "@sapphire/framework";
+import "@sapphire/plugin-logger/register";
+import axios from "axios";
+import { GatewayIntentBits, type GuildMember } from "discord.js";
+import {
+  logLevel,
+  robotEventsToken,
+  serverId,
+  vexWorldsFile,
+} from "./lib/config.js";
+import fs from "node:fs/promises";
 
 const discordClient = new SapphireClient({
-  shards: 'auto',
+  shards: "auto",
   intents: [
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMembers,
     GatewayIntentBits.GuildMessages,
     GatewayIntentBits.MessageContent,
   ],
-  logger: {level: logLevel},
+  logger: { level: logLevel },
 });
 
-const programs = [
-  {
-    eventId: 49725,
-    divisions: [
-      'Math (VRC HS)',
-      'Technology (VRC HS)',
-      'Science (VRC HS)',
-      'Engineering (VRC HS)',
-      'Arts (VRC HS)',
-      'Innovate (VRC HS)',
-      'Spirit (VRC HS)',
-      'Design (VRC HS)',
-      'Research (VRC HS)',
-      'Opportunity (VRC HS)',
-    ],
-  },
-  {
-    eventId: 49726,
-    divisions: [
-      'Science (VRC MS)',
-      'Technology (VRC MS)',
-      'Engineering (VRC MS)',
-      'Math (VRC MS)',
-      'Arts (VRC MS)',
-      'Opportunity (VRC MS)',
-    ],
-  },
-  {
-    eventId: 49727,
-    divisions: ['Research (VEX U)', 'Design (VEX U)'],
-  },
-];
 const divisionsByTeam = new Map<string, string>();
 
 export const update = async () => {
@@ -59,33 +28,49 @@ export const update = async () => {
   await updateRoles();
 };
 
+type VexWorlds = {
+  events: {
+    id: string;
+    divisions: string[];
+    teams?: string[];
+  }[];
+};
+
+const fetchTeams = async (eventId: string) => {
+  const teams: string[] = [];
+  let page = 0;
+  let lastPage: number;
+  do {
+    const {
+      data: { meta, data },
+    } = await axios.get<{
+      meta: { last_page: number };
+      data: { number: string }[];
+    }>(
+      `https://www.robotevents.com/api/v2/events/${eventId}/teams?per_page=250&page=${++page}`,
+      { headers: { Authorization: `Bearer ${robotEventsToken}` } },
+    );
+    data.forEach(({ number }) => teams.push(number));
+    lastPage = meta.last_page;
+  } while (page < lastPage);
+  return teams;
+};
+
 const updateDivisions = async () => {
+  const vexWorlds: VexWorlds = JSON.parse(
+    await fs.readFile(vexWorldsFile, { encoding: "utf-8" }),
+  );
   const events = await Promise.all(
-    programs.map(async ({eventId, divisions}) => {
-      const teams: string[] = [];
-      let page = 0;
-      let lastPage: number;
-      do {
-        const {
-          data: {meta, data},
-        } = await axios.get<{
-          meta: {last_page: number};
-          data: {number: string}[];
-        }>(
-          `https://www.robotevents.com/api/v2/events/${eventId}/teams?per_page=250&page=${++page}`,
-          {headers: {Authorization: `Bearer ${robotEventsToken}`}}
-        );
-        data.forEach(({number}) => teams.push(number));
-        lastPage = meta.last_page;
-      } while (page < lastPage);
-      return {divisions, teams};
-    })
+    vexWorlds.events.map(async ({ id, divisions, teams }) => ({
+      divisions,
+      teams: teams ?? (await fetchTeams(id)),
+    })),
   );
   divisionsByTeam.clear();
-  events.forEach(({divisions, teams}) =>
+  events.forEach(({ divisions, teams }) =>
     teams.forEach((team, index) =>
-      divisionsByTeam.set(team, divisions[index % divisions.length])
-    )
+      divisionsByTeam.set(team, divisions[index % divisions.length]),
+    ),
   );
 };
 
@@ -93,28 +78,28 @@ const updateRoles = async () => {
   const guild = await discordClient.guilds.fetch(serverId);
   const members = await guild.members.fetch();
   const manageableMembers = Array.from(
-    members.filter(member => member.manageable).values()
+    members.filter((member) => member.manageable).values(),
   );
   await Promise.all(
-    manageableMembers.map(member => setRoles(member, member.displayName))
+    manageableMembers.map((member) => setRoles(member, member.displayName)),
   );
-  discordClient.logger.info('DONE UPDATING ROLES');
+  discordClient.logger.info("DONE UPDATING ROLES");
 };
 
 export const setRoles = async (member: GuildMember, nickname: string) => {
-  if (!nickname || nickname.indexOf(' | ') === -1) {
+  if (!nickname || nickname.indexOf(" | ") === -1) {
     discordClient.logger.warn(`Invalid nickname: "${nickname}"`);
     return;
   }
 
-  const roleNames = ['Verified'];
-  const teamId = nickname.split(' | ')[1];
+  const roleNames = ["Verified"];
+  const teamId = nickname.split(" | ")[1];
   const division = divisionsByTeam.get(teamId);
   if (division) {
     roleNames.push(division);
   }
-  const roles = member.guild.roles.cache.filter(({name}) =>
-    roleNames.includes(name)
+  const roles = member.guild.roles.cache.filter(({ name }) =>
+    roleNames.includes(name),
   );
   if (division && roles.size < 2) {
     discordClient.logger.warn(`No role found for division: ${division}`);
@@ -127,22 +112,28 @@ export const setRoles = async (member: GuildMember, nickname: string) => {
 };
 
 const main = async () => {
-  discordClient.logger.info('Updating divisions');
-  await updateDivisions();
-  discordClient.logger.info('Updated divisions');
   try {
-    discordClient.logger.info('Logging in');
+    discordClient.logger.info("Updating divisions");
+    await updateDivisions();
+    discordClient.logger.info("Updated divisions");
+
+    discordClient.logger.info("Logging in");
     await discordClient.login();
-    discordClient.logger.info('Logged in');
+    discordClient.logger.info("Logged in");
+
+    discordClient.logger.info("Updating roles");
+    await updateRoles();
+    discordClient.logger.info("Updated roles");
+
+    setInterval(async () => await update(), 600_000);
   } catch (error) {
     discordClient.logger.fatal(error);
-    discordClient.destroy();
-    process.exit(1);
+    throw error;
   }
-  discordClient.logger.info('Updating roles');
-  await updateRoles();
-  discordClient.logger.info('Updated roles');
-  setInterval(async () => await update(), 600_000);
 };
+
+process.on("SIGTERM", async () => {
+  await discordClient.destroy();
+});
 
 main();

@@ -9,35 +9,33 @@ These instructions will get you a copy of the project up and running on your loc
 ### Prerequisites
 
 - [Node.js](https://nodejs.org/)
-- [Yarn](https://yarnpkg.com/)
 
 ### Environment Variables
 
-|       Variable       | Required |    Default    |                 Description                 |
-| :------------------: | :------: | :-----------: | :-----------------------------------------: |
-|   `DISCORD_TOKEN`    |    ✓     |               | Token of the Discord account to log in with |
-| `ROBOT_EVENTS_TOKEN` |    ✓     |               |           Robot Events API token            |
-|     `LOG_LEVEL`      |          |    `INFO`     |              Minimum log level              |
-|      `NODE_ENV`      |          | `development` |       Node.JS application environment       |
+|         Variable         | Required |    Default    |                 Description                 |
+| :----------------------: | :------: | :-----------: | :-----------------------------------------: |
+|     `ADMIN_ROLE_ID`      |    ✓     |               |    Id of the administrator Discord role     |
+|     `DISCORD_TOKEN`      |    ✓     |               | Token of the Discord account to log in with |
+| `NEW_MEMBERS_CHANNEL_ID` |    ✓     |               |    Id of the new members Discord channel    |
+|   `ROBOT_EVENTS_TOKEN`   |    ✓     |               |           Robot Events API token            |
+|    `RULES_CHANNEL_ID`    |    ✓     |               |       Id of the rules Discord channel       |
+|       `SERVER_ID`        |    ✓     |               |          Id of the Discord server           |
+|    `VEX_WORLDS_FILE`     |    ✓     |               |  Path to the VEX Worlds configuration file  |
+|       `LOG_LEVEL`        |          |    `INFO`     |              Minimum log level              |
+|        `NODE_ENV`        |          | `development` |       Node.JS application environment       |
 
 ### Installing
 
 Install dependencies
 
 ```sh
-yarn install
+npm install
 ```
 
 Start the bot
 
 ```sh
-yarn dev
-```
-
-## Running the tests
-
-```sh
-yarn test
+npm run dev
 ```
 
 ## Deployment
@@ -45,19 +43,19 @@ yarn test
 Install dependencies
 
 ```sh
-yarn install
+npm install
 ```
 
 Compile source
 
 ```sh
-yarn build
+npm run build
 ```
 
 Start the bot
 
 ```sh
-yarn start
+npm start
 ```
 
 ## Versioning
