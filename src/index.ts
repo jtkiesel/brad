@@ -33,6 +33,7 @@ type VexWorlds = {
     id: string;
     divisions: string[];
     teams?: string[];
+    anomalies?: { [team: string]: string };
   }[];
 };
 
@@ -61,17 +62,24 @@ const updateDivisions = async () => {
     await fs.readFile(vexWorldsFile, { encoding: "utf-8" }),
   );
   const events = await Promise.all(
-    vexWorlds.events.map(async ({ id, divisions, teams }) => ({
+    vexWorlds.events.map(async ({ id, divisions, teams, anomalies }) => ({
       divisions,
       teams: teams ?? (await fetchTeams(id)),
+      anomalies: anomalies ?? {},
     })),
   );
   divisionsByTeam.clear();
-  events.forEach(({ divisions, teams }) =>
-    teams.forEach((team, index) =>
-      divisionsByTeam.set(team, divisions[index % divisions.length]),
-    ),
-  );
+  events.forEach(({ divisions, teams, anomalies }) => {
+    Object.entries(anomalies).forEach(([team, division]) =>
+      divisionsByTeam.set(team, division),
+    );
+    const anomalyTeams = new Set(Object.keys(anomalies));
+    teams
+      .filter((team) => !anomalyTeams.has(team))
+      .forEach((team, index) =>
+        divisionsByTeam.set(team, divisions[index % divisions.length]),
+      );
+  });
 };
 
 const updateRoles = async () => {
